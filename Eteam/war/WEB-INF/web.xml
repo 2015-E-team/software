@@ -16,7 +16,7 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 	
 	<servlet>
 		<servlet-name>GetData</servlet-name>
-		<servlet-class>wine.GetDataSrvlet</servlet-class>
+		<servlet-class>wine.GetDataServlet</servlet-class>
 	</servlet>
 	
 

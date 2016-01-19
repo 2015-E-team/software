@@ -1,75 +1,93 @@
 package wine;
 
-import wine.PMF;
-
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
-import java.util.StringTokenizer;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
+import javax.jdo.PersistenceManager;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import javax.jdo.PersistenceManager;
+import org.apache.commons.fileupload.FileItemIterator;
+import org.apache.commons.fileupload.FileItemStream;
+import org.apache.commons.fileupload.FileUploadException;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
 @SuppressWarnings("serial")
-public class AddDataServlet extends HttpServlet{
+public class AddDataServlet extends HttpServlet {
 
-	public void doGet(HttpServletRequest req,
-			HttpServletResponse resp)
-					throws IOException {
-		resp.setContentType("text/plain");
-		resp.getWriter().println("can not access!!");
-	}
-	
-	public void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException{
+	// インスタンス保持用
+	// このためクローズ処理を書いていないのだが
+	// いいのだろうか？
+	private PersistenceManager pm;
+
+	@Override
+	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
+			throws ServletException, IOException {
+
+		ServletFileUpload fileUpload = new ServletFileUpload();
 		try {
-			//ファイルを読み込む
-			FileReader fr = new FileReader("/kkihome/home/t13cs051/git/software/Eteam/war/data.csv");
-			BufferedReader br = new BufferedReader(fr);
-
-			//読み込んだファイルを１行ずつ処理する
-			String line;
-			StringTokenizer token;
-			String key = null, date = null;
-			float tem = 0;
-			int hum = 0;
-			while ((line = br.readLine()) != null) {
-				//区切り文字","で分割する
-				token = new StringTokenizer(line, ",");
-
-				//分割した文字を画面出力する
-				while (token.hasMoreTokens()) {
-//					System.out.println(token.nextToken());
-					for(int i = 0; i < 4; i++){
-						if(i == 0)
-						    key = token.nextToken();
-						else if(i == 1)
-							date = token.nextToken();
-						else if(i == 2)
-							tem = Integer.parseInt(token.nextToken());
-						else if(i == 3)
-							hum = Integer.parseInt(token.nextToken());
-					}
-					SampleData data = new SampleData(key, date, tem, hum);
-					
-			    	PersistenceManager pm = PMF.get().getPersistenceManager();
-		        	try {
-		        		pm.makePersistent(data);
-		        	} finally {
-		        		pm.close();
-		        	}
+			FileItemIterator itemIterator = fileUpload.getItemIterator(req);
+			while (itemIterator.hasNext()) {
+				FileItemStream itemStream = itemIterator.next();
+				InputStream inputStream = itemStream.openStream();
+				String contentType = itemStream.getContentType();
+				if (contentType == null) {
+					contentType = "";
 				}
-//				System.out.println("**********");
+				// 画像ファイルの時はそのまま書き出し処理
+				if (contentType.contains("image")) {
+					resp.setContentType(contentType);
+					BufferedInputStream bi = new BufferedInputStream(
+							inputStream);
+					int len;
+					while ((len = bi.read()) != -1) {
+						resp.getOutputStream().write(len);
+					}
+					// テキストファイルの場合またはファイル名の拡張子が".csv"の場合
+				} else if (contentType.contains("text")
+						|| itemStream.getName().endsWith(".csv")) {
+					resp.setContentType("text/html");
+					BufferedReader buffer = new BufferedReader(new InputStreamReader(inputStream, "SJIS"));
+					String line = null;
+					int i = 0;
+					while ((line = buffer.readLine()) != null) {
+						String[] split = line.split(",");
+
+						if (split != null && split.length == 4 && split[1].startsWith("2")) {
+							// csvから日付の取り出し
+							String key = split[0].trim();
+							String date = split[1].trim();
+							// csvから温度の取り出し
+							double tem = Double.parseDouble(split[2].trim());
+							// csvから湿度の取り出し
+							int hum = Integer.parseInt(split[3].trim());
+
+						//	System.out.println("地点: " + key + "日付: "+ date + "気温: " + tem + "hum: " + hum);
+							
+							// 登録するモデル
+							SampleData data = new SampleData(key, date, tem, hum);
+							if (pm == null) {
+								pm = PMF.get().getPersistenceManager();
+							}
+							pm.makePersistent(data);
+							i++;
+						}
+					}
+					resp.setCharacterEncoding("UTF-8");
+					resp.getWriter().write(i + "件登録しました。");
+				} else {
+					resp.setContentType("text/html");
+					resp.setCharacterEncoding("UTF-8");
+					resp.getWriter().write("ファイルを認識できません。");
+				}
 			}
-
-			//終了処理
-			br.close();
-
-		} catch (IOException ex) {
-			//例外発生時処理
-			ex.printStackTrace();
+		} catch (FileUploadException e) {
+			resp.sendError(500);
 		}
 		resp.sendRedirect("./Kofu/test.jsp");
 	}

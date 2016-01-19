@@ -6,9 +6,6 @@ import javax.jdo.annotations.*;
 @PersistenceCapable(identityType = IdentityType.APPLICATION)
 
 public class SampleData {
-
-
-
 	
 	//フィールド名の前につける．永続化されることを示す
 	@Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
@@ -21,14 +18,14 @@ public class SampleData {
 	private String date;
 	
 	@Persistent
-	private float tem;
+	private double tem;
 	
 	@Persistent
 	private int hum;
 	
 	public SampleData(){}
 	
-	public SampleData(String key, String date, float tem, int hum){
+	public SampleData(String key, String date, double tem, int hum){
 		this.key = key;
 		this.date = date;
 		this.tem = tem;

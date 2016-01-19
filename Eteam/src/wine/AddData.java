@@ -25,7 +25,7 @@ public class AddData extends HttpServlet{
 			String line;
 			StringTokenizer token;
 			String key = null, date = null;
-			float tem = 0;
+			double tem = 0;
 			int hum = 0;
 			while ((line = br.readLine()) != null) {
 				//区切り文字","で分割する
@@ -40,7 +40,7 @@ public class AddData extends HttpServlet{
 						else if(i == 1)
 							date = token.nextToken();
 						else if(i == 2)
-							tem = Integer.parseInt(token.nextToken());
+							tem = Double.parseDouble(token.nextToken());
 						else if(i == 3)
 							hum = Integer.parseInt(token.nextToken());
 					}

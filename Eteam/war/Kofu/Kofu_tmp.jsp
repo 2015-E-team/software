@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-
+	
 <%@ page import="wine.PMF" %>
 <%@ page import="wine.SampleData" %>
 
@@ -8,6 +8,7 @@
 <%@ page import="javax.jdo.Query" %>
 <%@ page import="java.text.MessageFormat" %>
 <%@ page import="java.util.List" %>
+
 	
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -19,12 +20,12 @@
 <body>
 	<a href="../index.html">トップ</a>
 	
-<!--     <form action="/adddata" method="post" enctype="multipart/form-data">
-																						
+     <form action="/adddata" method="post" enctype="multipart/form-data">
 
-        <input type="submit" value="アップロード" />
+		<input type="file" name="file" /><br /> 
+		<input type="submit"value="アップロード" />
 
-    </form>
+	</form>
 <!-- <h1>Add Data.</h1>
 	<table>
 		<form method="post" action="/gae_add">

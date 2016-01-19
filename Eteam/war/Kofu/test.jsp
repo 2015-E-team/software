@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
-	
+    pageEncoding="UTF-8"%>
+    
 <%@ page import="wine.PMF" %>
 <%@ page import="wine.SampleData" %>
 
@@ -8,79 +8,67 @@
 <%@ page import="javax.jdo.Query" %>
 <%@ page import="java.text.MessageFormat" %>
 <%@ page import="java.util.List" %>
-	
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+
 <html>
-  <head>
-    <meta http-equiv="Content-Type" content="text/html; utf-8" />
-  <title>PersonalData Index</title>
-  
-</head>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>otaru_tem</title>
 
-<%
-	List<SampleData> datas = (List<SampleData>) request.getAttribute("datas");
-%>
-
-<body>
-	<a href="Kofu_tmp.jsp">甲府</a>
-<!-- 	    <form action="/getdata" method="post" enctype="multipart/form-data"></form> -->
-	
-<center>
-
-<h2>一覧表示</h2>
-<div class="tbl_center">
-<div style="width: 750; text-align: left; margin: auto;">
-	<a href="/">トップページへ</a>
-</div>
-<table class="sample-tbl html5jp-tbldeco" style="font-size: 0.8em; text-align: center;">
-	<thead>
-		<tr>
-			<th style="width: 150px;">地域</th>
-			<th style="width: 300px;">日</th>
-			<th style="width: 150px;">温度</th>
-			<th style="width: 150px;">湿度</th>
-		</tr>
-	</thead>
-	<tbody>
-<%
-	for (SampleData data : datas) {
-%>
-		<tr>
-			<td><%= data.getKey() %></td>
-			<td><%= data.getDate() %></td>
-			<td><%= data.getTem() %></td>
-			<td><%= data.getHum() %></td>
-		</tr>
+	<!--Load the AJAX API-->
+	<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+   	<script type="text/javascript">
+	// corechart パッケージを読み込む
+  	google.load('visualization', '1.0', {'packages':['corechart']});
+  	// このページが読み込まれた時に drawChart を呼び出す
+  	google.setOnLoadCallback(drawChart);
+ 	// drawChart 関数
+ 	function drawChart() {
+         // データテーブルの生成と、要素の代入
+        var data = new google.visualization.DataTable();
+        data.addColumn('date', 'ひづけ');
+        data.addColumn('tem', 'おんど');
+        
+        data.addRows([
 		<%
-			}
+		PersistenceManager pm = null;
+		try {
+    		pm = PMF.get().getPersistenceManager();
+    		Query query = pm.newQuery(SampleData.class);
+    		List<SampleData> datas = (List<SampleData>) query.execute();
+			// すべてのエンティティの表示
+			for (SampleData data : datas) {
 		%>
-	</tbody>
-</table>
-</div>
-<!-- <h1>Add Data.</h1>
-	<table>
-		<form method="post" action="/gae_add">
-			<tr><td>Message:</td><td>
-			<textarea name="message" cols="30" rows="3">
-        	</textarea></td></tr>
+      			['<%= data.getDate() %>', <%= data.getTem() %>],
+			<%
+    		}
+		} finally {
+    	if (pm != null && !pm.isClosed())
+       	pm.close();
+		}
+		%>
 
-			<tr><td>Account:</td><td>
-				<input type="text" name="account" /></td></tr>
-			<tr><td></td><td>
-				<input type="submit" /></td></tr>
-		</form>
-	</table>
-	
-	 <table>
-		<form action="/gae_del">
-			<tr><td>Delete</td><td>
-			<tr><td></td><td>
-				<input type="submit" /></td></tr>
-		</form>
-	</table>
-	
-	 <div id="curve_chart" style="width: 900px; height: 500px"></div> -->
-	 </center>
+        ]);
+                
+       	 // グラフのタイトル、サイズなどの option 設定
+        var options = {'title':'otarutem',
+                       'width':400,
+                       'height':300};
+      	 // グラフの実体 chart を生成。id は chart_div
+     	 var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+      	 // draw() メソッドは必ず呼ぶ
+        chart.draw(data, options);
+ 	 }
+ 	</script>
+
+</head>
+<body>
+
+    <!-- グラフの id を指定して描画 -->
+    <div id="chart_div"></div>
+
+</p>
+
 </body>
-
 </html>
