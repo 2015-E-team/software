@@ -22,7 +22,7 @@ public class Gae_addServlet extends HttpServlet {
 		String message = request.getParameter("message");
 		String account = request.getParameter("account");
 		Date date = Calendar.getInstance().getTime();
-		SampleData data = new SampleData(message,account,date);
+//		SampleData data = new SampleData(message,account,date);
 		
 		//PMF.getを呼び出し、MersistenceManagerFactoryインスタンスを取得
 		//ここから一切に永続化の操作を行うPersistenceManagerクラスのインスタンスを取り出す
@@ -31,7 +31,7 @@ public class Gae_addServlet extends HttpServlet {
 		
 		//保存する
 		try {
-			pm.makePersistent(data);
+//			pm.makePersistent(data);
 		} finally {
 			pm.close();
 		}

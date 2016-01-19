@@ -20,9 +20,9 @@ public class Gae_getServlet extends HttpServlet {
 		out.write("<tr><th>ID</th><th>Message</th><th>Account</th><th>Date</th></tr>");
 		for(SampleData data : datas){
 			out.write("<tr>");
-			out.write("<td>" + data.getId() + "</td>");
-			out.write("<td>" + data.getMessage() + "</td>");
-			out.write("<td>" + data.getAccount() + "</td>");
+//			out.write("<td>" + data.getId() + "</td>");
+//			out.write("<td>" + data.getMessage() + "</td>");
+//			out.write("<td>" + data.getAccount() + "</td>");
 			out.write("<td>" + data.getDate() + "</td>");
 			out.write("</tr>");
 		}

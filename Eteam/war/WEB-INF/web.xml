@@ -8,6 +8,17 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 		<servlet-name>Eteam</servlet-name>
 		<servlet-class>wine.EteamServlet</servlet-class>
 	</servlet>
+	
+	<servlet>
+		<servlet-name>AddData</servlet-name>
+		<servlet-class>wine.AddDataServlet</servlet-class>
+	</servlet>
+	
+	<servlet>
+		<servlet-name>GetData</servlet-name>
+		<servlet-class>wine.GetDataSrvlet</servlet-class>
+	</servlet>
+	
 
 	<servlet>
 		<servlet-name>Gae_add</servlet-name>
@@ -28,6 +39,16 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 	<servlet-mapping>
 		<servlet-name>Eteam</servlet-name>
 		<url-pattern>/eteam</url-pattern>
+	</servlet-mapping>
+	
+	<servlet-mapping>
+		<servlet-name>AddData</servlet-name>
+		<url-pattern>/adddata</url-pattern>
+	</servlet-mapping>
+	
+	<servlet-mapping>
+		<servlet-name>GetData</servlet-name>
+		<url-pattern>/getdata</url-pattern>
 	</servlet-mapping>
 
 	<servlet-mapping>

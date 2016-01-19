@@ -1,6 +1,5 @@
 package wine;
 
-import java.util.Date;
 import javax.jdo.annotations.*;
 
 //JDOによる永続化可能クラスと認識されるようになる
@@ -8,57 +7,64 @@ import javax.jdo.annotations.*;
 
 public class SampleData {
 
-	//プライマリキーであることを示すもの．フィールドの名の前につける
-	@PrimaryKey
+
+
 	
 	//フィールド名の前につける．永続化されることを示す
 	@Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
 	//自動割付されるID番号(Long値)プライマリーキーとして使うもの
-	private Long id;
 	
-	//簡単なメッセージを保管するもの
-	@Persistent
-	private String message;
+	private String key;
+
+	//プライマリキーであることを示すもの．フィールドの名の前につける
+	@PrimaryKey
+	private String date;
 	
-	//メッセージを記入した人のアカウント名を保管するもの
 	@Persistent
-	private String account;
+	private float tem;
 	
-	//メッセージを保管した日時を保管するもの
 	@Persistent
-	private Date date;
+	private int hum;
 	
 	public SampleData(){}
 	
-	public SampleData(String message, String account, Date date){
-		this.message = message;
-		this.account = account;
+	public SampleData(String key, String date, float tem, int hum){
+		this.key = key;
 		this.date = date;
+		this.tem = tem;
+		this.hum = hum;
 	}
 	
-
-	public Long getId(){
-		return id;
+	public String getKey(){
+		return key;
 	}
 	
-	public String getMessage(){
-		return message;
-	}
-	
-		public void setMessage(String message){
-		this.message = message;
-	}
-
-	public String getAccount(){
-		return account;
-	}
-	
-	public void setAccount(String account){
-		this.account = account;
-	}
-	
-	public Date getDate(){
+	public String getDate(){
 		return date;
 	}
+	
+	public double getTem(){
+		return tem;
+	}
+	
+	public int getHum(){
+		return hum;
+	}
+	
+	public void setKey(String key){
+		this.key = key;
+	}
+	public void setDate(String date){
+		this.date = date;
+	}
+
+	public void setTem(float tem){
+		this.tem = tem;
+	}
+	
+	public void setHum(int hum){
+		this.hum = hum;
+	}
+	
 }
 
