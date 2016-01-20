@@ -19,14 +19,17 @@
 	<!--Load the AJAX API-->
 	<script type="text/javascript" src="https://www.google.com/jsapi"></script>
    	<script type="text/javascript">
+   	
 	// corechart パッケージを読み込む
   	google.load('visualization', '1.0', {'packages':['corechart']});
+	
   	// このページが読み込まれた時に drawChart を呼び出す
   	google.setOnLoadCallback(drawChart);
+  	
  	// drawChart 関数
  	function drawChart() {
          // データテーブルの生成と、要素の代入
-        var data = new google.visualization.DataTable();
+        var data = new google.visualization.DataTable([]);
         data.addColumn('date', 'ひづけ');
         data.addColumn('tem', 'おんど');
         
@@ -52,7 +55,7 @@
         ]);
                 
        	 // グラフのタイトル、サイズなどの option 設定
-        var options = {'title':'otarutem',
+        var options = {'title':'otaru_tem',
                        'width':400,
                        'height':300};
       	 // グラフの実体 chart を生成。id は chart_div

@@ -10,61 +10,30 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 	</servlet>
 	
 	<servlet>
-		<servlet-name>AddData</servlet-name>
-		<servlet-class>wine.AddDataServlet</servlet-class>
+		<servlet-name>Data_Add</servlet-name>
+		<servlet-class>wine.Data_AddServlet</servlet-class>
 	</servlet>
 	
 	<servlet>
-		<servlet-name>GetData</servlet-name>
-		<servlet-class>wine.GetDataServlet</servlet-class>
+		<servlet-name>Data_Get</servlet-name>
+		<servlet-class>wine.Data_GetServlet</servlet-class>
 	</servlet>
-	
-
-	<servlet>
-		<servlet-name>Gae_add</servlet-name>
-		<servlet-class>wine.Gae_addServlet</servlet-class>
-	</servlet>
-
-	<servlet>
-		<servlet-name>Gae_get</servlet-name>
-		<servlet-class>wine.Gae_getServlet</servlet-class>
-	</servlet>
-	
-	<servlet>
-		<servlet-name>Gae_del</servlet-name>
-		<servlet-class>wine.Gae_delServlet</servlet-class>
-	</servlet>
-	
-
+		
 	<servlet-mapping>
 		<servlet-name>Eteam</servlet-name>
 		<url-pattern>/eteam</url-pattern>
 	</servlet-mapping>
 	
 	<servlet-mapping>
-		<servlet-name>AddData</servlet-name>
-		<url-pattern>/adddata</url-pattern>
+		<servlet-name>Data_Add</servlet-name>
+		<url-pattern>/data_add</url-pattern>
 	</servlet-mapping>
 	
 	<servlet-mapping>
-		<servlet-name>GetData</servlet-name>
-		<url-pattern>/getdata</url-pattern>
+		<servlet-name>Data_Get</servlet-name>
+		<url-pattern>/data_get</url-pattern>
 	</servlet-mapping>
 
-	<servlet-mapping>
-		<servlet-name>Gae_add</servlet-name>
-		<url-pattern>/gae_add</url-pattern>
-	</servlet-mapping>
-
-	<servlet-mapping>
-		<servlet-name>Gae_get</servlet-name>
-		<url-pattern>/gae_get</url-pattern>
-	</servlet-mapping>
-	
-	<servlet-mapping>
-		<servlet-name>Gae_del</servlet-name>
-		<url-pattern>/gae_del</url-pattern>
-	</servlet-mapping>
 	
 
 	<welcome-file-list>

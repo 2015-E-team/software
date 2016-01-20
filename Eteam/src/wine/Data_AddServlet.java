@@ -18,7 +18,7 @@ import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
 @SuppressWarnings("serial")
-public class AddDataServlet extends HttpServlet {
+public class Data_AddServlet extends HttpServlet {
 
 	// インスタンス保持用
 	// このためクローズ処理を書いていないのだが
