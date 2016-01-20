@@ -20,7 +20,7 @@
 <body>
 	<a href="../index.html">トップ</a>
 	
-     <form action="/adddata" method="post" enctype="multipart/form-data">
+     <form action="/data_add" method="post" enctype="multipart/form-data">
 
 		<input type="file" name="file" /><br /> 
 		<input type="submit"value="アップロード" />

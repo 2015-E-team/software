@@ -17,61 +17,63 @@
 <title>otaru_tem</title>
 
 	<!--Load the AJAX API-->
-	<script type="text/javascript" src="https://www.google.com/jsapi"></script>
-   	<script type="text/javascript">
-   	
-	// corechart パッケージを読み込む
-  	google.load('visualization', '1.0', {'packages':['corechart']});
 	
-  	// このページが読み込まれた時に drawChart を呼び出す
-  	google.setOnLoadCallback(drawChart);
-  	
- 	// drawChart 関数
- 	function drawChart() {
-         // データテーブルの生成と、要素の代入
-        var data = new google.visualization.DataTable([]);
-        data.addColumn('date', 'ひづけ');
-        data.addColumn('tem', 'おんど');
-        
-        data.addRows([
-		<%
-		PersistenceManager pm = null;
-		try {
-    		pm = PMF.get().getPersistenceManager();
-    		Query query = pm.newQuery(SampleData.class);
-    		List<SampleData> datas = (List<SampleData>) query.execute();
-			// すべてのエンティティの表示
-			for (SampleData data : datas) {
-		%>
-      			['<%= data.getDate() %>', <%= data.getTem() %>],
-			<%
-    		}
-		} finally {
-    	if (pm != null && !pm.isClosed())
-       	pm.close();
-		}
-		%>
+  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+    google.charts.load('current', {'packages':['line']});
+    google.charts.setOnLoadCallback(drawChart);
 
-        ]);
-                
-       	 // グラフのタイトル、サイズなどの option 設定
-        var options = {'title':'otaru_tem',
-                       'width':400,
-                       'height':300};
-      	 // グラフの実体 chart を生成。id は chart_div
-     	 var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
-      	 // draw() メソッドは必ず呼ぶ
-        chart.draw(data, options);
- 	 }
- 	</script>
+  function drawChart() {
 
+    var data = new google.visualization.DataTable();
+    data.addColumn('string', 'Day');
+    data.addColumn('number', 'Tem');
+
+    data.addRows([
+          		<%
+        		PersistenceManager pm = null;
+          		int i = 0;
+        		try {
+            		pm = PMF.get().getPersistenceManager();
+            		Query query = pm.newQuery(SampleData.class);
+            		List<SampleData> datas = (List<SampleData>) query.execute();
+        			// すべてのエンティティの表示
+        			for (SampleData da : datas) {
+        		%>
+              			['<%= da.getDate() %>', <%= da.getTem() %>],
+        			<%
+        			i++;
+              	if(i == 6)
+              		break;
+            		}
+        		} finally {
+            	if (pm != null && !pm.isClosed())
+               	pm.close();
+        		}
+        		%>
+        		
+    ]);
+
+    var options = {
+      chart: {
+        title: 'otaru',
+        subtitle: 'tem'
+      },
+      width: 900,
+      height: 500
+    };
+
+    var chart = new google.charts.Line(document.getElementById('chart_div'));
+
+    chart.draw(data, options);
+  }
+    </script>
 </head>
 <body>
-
+	<a href="Kofu_tmp.jsp">トップ</a>
     <!-- グラフの id を指定して描画 -->
     <div id="chart_div"></div>
 
-</p>
 
 </body>
 </html>
