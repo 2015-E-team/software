@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.jdo.Query;
 
 @SuppressWarnings("serial")
-public class Data_GetServlet extends HttpServlet{
+public class Graph_Shift extends HttpServlet{
 	@SuppressWarnings("unchecked")
 	public void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
 		
@@ -23,9 +23,9 @@ public class Data_GetServlet extends HttpServlet{
 		Query query = pm.newQuery(SampleData.class);
 		List<SampleData> datas = (List<SampleData>) pm.newQuery(query).execute();
 		
-		req.setAttribute("_datas", datas);
+		req.setAttribute("datas", datas);
 		
-		RequestDispatcher rd = req.getRequestDispatcher("../../war/Kofu/test.jsp");
+		RequestDispatcher rd = req.getRequestDispatcher("./Kofu/test.jsp");
 		
 		try{
 			rd.forward(req, resp);

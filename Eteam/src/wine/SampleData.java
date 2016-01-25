@@ -1,5 +1,7 @@
 package wine;
 
+import java.util.Date;
+
 import javax.jdo.annotations.*;
 
 //JDOによる永続化可能クラスと認識されるようになる
@@ -23,13 +25,17 @@ public class SampleData {
 	@Persistent
 	private int hum;
 	
+	@Persistent
+	private Date r_date;
+	
 	public SampleData(){}
 	
-	public SampleData(String key, String date, double tem, int hum){
+	public SampleData(String key, String date, double tem, int hum, Date r_date){
 		this.key = key;
 		this.date = date;
 		this.tem = tem;
 		this.hum = hum;
+		this.r_date = r_date;
 	}
 	
 	public String getKey(){
@@ -48,6 +54,10 @@ public class SampleData {
 		return hum;
 	}
 	
+	public Date getR_Date(){
+		return r_date;
+	}
+	
 	public void setKey(String key){
 		this.key = key;
 	}
@@ -63,5 +73,8 @@ public class SampleData {
 		this.hum = hum;
 	}
 	
+	public void setR_Date(Date r_date){
+		this.r_date = r_date;
+	}
 }
 

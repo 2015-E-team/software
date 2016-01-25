@@ -5,6 +5,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.Date;
 
 import javax.jdo.PersistenceManager;
 import javax.servlet.ServletException;
@@ -70,7 +71,7 @@ public class Data_AddServlet extends HttpServlet {
 						//	System.out.println("地点: " + key + "日付: "+ date + "気温: " + tem + "hum: " + hum);
 							
 							// 登録するモデル
-							SampleData data = new SampleData(key, date, tem, hum);
+							SampleData data = new SampleData(key, date, tem, hum, new Date());
 							if (pm == null) {
 								pm = PMF.get().getPersistenceManager();
 							}
