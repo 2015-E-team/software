@@ -21,9 +21,6 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
 @SuppressWarnings("serial")
 public class Data_AddServlet extends HttpServlet {
 
-	// インスタンス保持用
-	// このためクローズ処理を書いていないのだが
-	// いいのだろうか？
 	private PersistenceManager pm;
 
 	@Override
@@ -67,8 +64,6 @@ public class Data_AddServlet extends HttpServlet {
 							double tem = Double.parseDouble(split[2].trim());
 							// csvから湿度の取り出し
 							int hum = Integer.parseInt(split[3].trim());
-
-						//	System.out.println("地点: " + key + "日付: "+ date + "気温: " + tem + "hum: " + hum);
 							
 							// 登録するモデル
 							SampleData data = new SampleData(name, date, tem, hum, new Date());

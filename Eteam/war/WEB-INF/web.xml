@@ -4,37 +4,16 @@
 	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
 http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 	version="2.5">
-	<servlet>
-		<servlet-name>Eteam</servlet-name>
-		<servlet-class>wine.EteamServlet</servlet-class>
-	</servlet>
 	
 	<servlet>
 		<servlet-name>Data_Add</servlet-name>
 		<servlet-class>wine.Data_AddServlet</servlet-class>
 	</servlet>
 	
-	<servlet>
-		<servlet-name>Data_Get</servlet-name>
-		<servlet-class>wine.Data_GetServlet</servlet-class>
-	</servlet>
-		
-	<servlet-mapping>
-		<servlet-name>Eteam</servlet-name>
-		<url-pattern>/eteam</url-pattern>
-	</servlet-mapping>
-	
 	<servlet-mapping>
 		<servlet-name>Data_Add</servlet-name>
 		<url-pattern>/data_add</url-pattern>
 	</servlet-mapping>
-	
-	<servlet-mapping>
-		<servlet-name>Data_Get</servlet-name>
-		<url-pattern>/data_get</url-pattern>
-	</servlet-mapping>
-
-	
 
 	<welcome-file-list>
 		<welcome-file>index.html</welcome-file>

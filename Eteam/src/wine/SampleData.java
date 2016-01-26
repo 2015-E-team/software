@@ -14,11 +14,11 @@ public class SampleData {
 	@Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
 	//自動割付されるID番号(Long値)プライマリーキーとして使うもの
 	private Long key;
-	
-	@Persistent
-	private String name;
 
 	//プライマリキーであることを示すもの．フィールドの名の前につける
+	@Persistent
+	private String name;
+	
 	@Persistent
 	private String date;
 	
