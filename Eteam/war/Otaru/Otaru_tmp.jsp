@@ -1,5 +1,12 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@ page import="wine.PMF" %>
+<%@ page import="wine.SampleData" %>
+
+<%@ page import="javax.jdo.PersistenceManager" %>
+<%@ page import="javax.jdo.Query" %>
+<%@ page import="java.text.MessageFormat" %>
+<%@ page import="java.util.List" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -187,18 +194,21 @@ button.button_linkhelp:hover {
 </style>
 
 <script type="text/javascript">
-    function ファイル読込(ファイル名, 読込後処理名) {
-        var 読込後処理
+    function ファイル読込(ファイル位置/*, 読込後処理名*/) {
+        /*var 読込後処理
             =  new Function("引数", "return " + 読込後処理名 + "(引数)");   
-        var httpObj = new XMLHttpRequest();
+        /*var httpObj = new XMLHttpRequest();
         httpObj.open("GET", ファイル名, true);
         httpObj.onreadystatechange = function() {
             if (httpObj.readyState == 4) {
-                読込文 = httpObj.responseText;
+                読込文 = httpObj.responseText
                 読込後処理(読込文);
             }
         }
         httpObj.send(null);
+        例１(ファイル名);
+    	*/
+    	例１(ファイル位置);
     }
 </script>
 
@@ -298,8 +308,9 @@ button.button_linkhelp:hover {
 
 					<script type="text/javascript">
 
-				    function 例１(読込文) {
+				    function 例１(/*読込文*/ファイル位置) {
 				    	
+				    	/*
 				        var 行列 = new Array();
 				        //var 行 = null;
 				        if (読込文.match(/\r/)){
@@ -323,7 +334,6 @@ button.button_linkhelp:hover {
 				            }
 				            if (列数 > 最大列数) 最大列数 = 列数;               // Ｅ
 				        }
-
 				        
 				        var danbou_h = 行列[0][0];
 						 var danbou_m = 行列[0][1];
@@ -338,10 +348,32 @@ button.button_linkhelp:hover {
 						　 						"　冷房稼働合計　：　" + String(reibou_h) + "時間" + String(reibou_m) + "分" + "<br>" +
 						   						"　加湿器稼働合計：　" + String(joshitsu_h) + "時間" + String(joshitsu_m) + "分" + "<br>" +
 						   						"　除湿機稼働合計：　" + String(kashitsu_h) + "時間" + String(kashitsu_m) + "分";
+			        	*/
+			        	var 表示内容_data = null;
+			        	<%
+		        		PersistenceManager pm = null;
+		          		
+		        		try {
+		            		pm = PMF.get().getPersistenceManager();
+		            		Query query = pm.newQuery(SampleData.class);
+		            		List<SampleData> datas = (List<SampleData>) query.execute();
+		        			// すべてのエンティティの表示
+		        			for (SampleData da : datas) {
+		        		%>
+		        		if('<%= da.getDate() %>' == "2014/1/5 12:00:00")
+							表示内容_data = '<%=da.getDate()%>'+ "<br>";
+		        			<%
+		            		}
+		        			%>
+		        			表示内容_data += '<%=datas.get(5).getDate()%>';
+		        			<%
+		        		} finally {
+		            	if (pm != null && !pm.isClosed())
+		               	pm.close();
+		        		}
+		        		%>
 				        
-				        
-				        /*var 表示内容_data = "";
-				        
+		        		/*var 表示内容_data = "";
 				        for (i = 0; i < 行数; i++) {
 				            for (j = 0; j < 最大列数; j++) {
 				                表示内容_data +=  "行列[" + i + "][" + j + "]=" + 行列[i][j] + ", ";
@@ -359,8 +391,7 @@ button.button_linkhelp:hover {
 				-->
 				<script>
 				function PutMoveTime(){
-					
-					if(    document.date.year.selectedIndex == 0 ||
+					/*if(    document.date.year.selectedIndex == 0 ||
 							document.date.month.selectedIndex == 0){
 						var 表示内容_nodata = "表示する年と月を指定してください"
 					    document.getElementById("例１表示場所").innerHTML = 表示内容_nodata;
@@ -376,7 +407,25 @@ button.button_linkhelp:hover {
 						}
 						ファイル読込(ファイル名, '例１');
 					}
+					*/
 					
+					if(    document.date.year.selectedIndex == 0 ||
+							document.date.month.selectedIndex == 0){
+						var 表示内容_nodata = "表示する年と月を指定してください"
+					    document.getElementById("例１表示場所").innerHTML = 表示内容_nodata;
+					}
+					else{
+						//表示内容_nodata = document.date.year.selectedIndex + 2015 + "年" + document.date.month.selectedIndex + "月";
+						var 年データ数 = 744;
+						var 月データ数 = 743;
+						var 日データ数 = 24;
+						var データ開始年度 = 2014;
+						var プルダウン開始年度 = 2016;
+						var ファイル位置 = 
+							document.date.year.selectedIndex ;
+						
+						ファイル読込(ファイル位置);
+					}
 				}
 				</script>
 					<div id="例１表示場所">
