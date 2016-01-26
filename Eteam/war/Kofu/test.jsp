@@ -8,22 +8,42 @@
 <%@ page import="javax.jdo.Query" %>
 <%@ page import="java.text.MessageFormat" %>
 <%@ page import="java.util.List" %>
+<%@ page import="java.util.ArrayList" %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
 <html>
 <head>
-<% int end = 0; 
+<% 
+	int start = 0;
+	int end = 744; 
 	String str = request.getParameter("end");
 	String next = request.getParameter("next");
 	String pre = request.getParameter("pre");
 	
+	String _year = request.getParameter("year");
+	String _month = request.getParameter("month");
+	String _day = request.getParameter("day");
+	String _hour = request.getParameter("hour");
+		
+	if(_year != null && _month != null && _day != null && _hour != null){
+ 		end = (Integer.parseInt(_day) - 1) * 24 + Integer.parseInt(_hour) + 744;
+ 		if(end >= 1482)
+			end = 1482;
+	}
+		
 	if( str != null && next != null )
-		end = Integer.parseInt(str) + 4;
+		if(Integer.parseInt(str) < 1482)
+			end = Integer.parseInt(str) + 6;
+		else 
+			end = 1482;
 	
-	if( str != null && pre != null )
-		end = Integer.parseInt(str) - 4;
-
+	if( str != null && pre != null ){
+		if(Integer.parseInt(str) >= 750)
+			end = Integer.parseInt(str) - 6;
+		else 
+			end = 744;
+	}
 %>
 
 
@@ -42,11 +62,17 @@
     function drawChart() {
     	var data = new google.visualization.DataTable();
     	data.addColumn('string', 'Day');
-    	data.addColumn('number', 'Tem');
+    	data.addColumn('number', 'Otaru_Tem')
+    	data.addColumn('number', 'Asti_Tem');
     	data.addRows([
           		<%
-       		PersistenceManager pm = null;
+          		PersistenceManager pm = null;
           		int i = 0;
+          		//一時的に格納した、温度を取り出すときに回す変数
+          		int tem_count = 0;
+          		//一時的に、温度を格納する配列
+          		ArrayList<Double> asti_tem= new ArrayList<Double>();
+          		
           		try {
             		pm = PMF.get().getPersistenceManager();
             		Query query = pm.newQuery(SampleData.class);
@@ -54,16 +80,24 @@
             		List<SampleData> datas = (List<SampleData>) query.execute();
         			// すべてのエンティティの表示
         			for (SampleData da : datas) {
-                	if(i == end + 4 )
-                		break;
+                	if(i == end + 6)
+              		break;
+					if(da.getName().equals("asti")){
+						double tmp = (da.getTem() - 32) / 1.8;
+						asti_tem.add(tmp);
+					}
                 	
-//                	if(da.getDate() == "2014/1/1 01:00:00")
-//                		end = 0;                		
+                	if(da.getDate() == "2014/1/1 00:00:00")
+                		end = 744;                		
+					
 
-					if(i >= end){%>        					
-              			['<%= da.getDate() %>', <%= da.getTem() %>],
-        			<%}
-					System.out.println("end : " + end + " i : " + i + " date : " + da.getDate());
+					if(i >= end){
+						if(da.getName().equals("otaru")){%>
+							['<%= da.getDate() %>', <%=asti_tem.get(tem_count)%>, <%=da.getTem()%>],
+							<%tem_count++;
+						}
+					}
+
        			i++;
             		}
         		} finally {
@@ -75,13 +109,11 @@
     	]);
 	    
 	    var options = {
-	    		chart: {
-        		title: ' ',
-        		subtitle: ' '
-        		},
-        		width: 700,
-        		height: 350
+	    		chart: {title: ' ', subtitle: ' '},
+        		width: 1259,height: 700,
+        		vAxis: {minValue: -20, maxValue: 50}
         		};
+
 	    var chart = new google.charts.Line(document.getElementById('chart_div'));
 
 	    chart.draw(data, options);
@@ -108,7 +140,7 @@
 div.tabbox {
 	margin: 0px;
 	padding: 0px;
-	width: 750px;
+	width: 1263px;
 }
 
 /* タブ部分 */
@@ -169,7 +201,7 @@ p.tabs a:hover {
 
 /* タブ中身のボックス */
 div.tab {
-	height: 450px;
+	height: 815px;
 	overflow: auto;
 	clear: left;
 }
@@ -230,39 +262,41 @@ div.tab p {
 			<div id="tab1" class="tab">
 				<p>(タブ1の中身。何でも記述できます。)</p>
 				<p>
-				<form>
-					<select name="product" size="1" onChange="change(this)">
+				<form name="f">
+					<input type="hidden" name="start" value="<%=start%>">
+					<select name="year" size="1" onChange="change(this)">
 						<OPTION VALUE="">------------
-						<% for(int j = 2000; j < 2020; j++) {%>
-						<option value="<%= j%>"><%= j%>
-						<% }%>
+						<% int year = 2014;%>
+						<option value="<%= year%>"><%= year%>
+
 					</select>
 					年
 						
-					<select name="product" size="1" onChange="change(this)">
+					<select name="month" size="1" onChange="change(this)">
 					<OPTION VALUE="">------------
-					<% for(int j = 1; j <= 12; j++) {%>
-					<option value="<%= j%>"><%= j%>
+					<% for(int month = 1; month <= 12; month++) {%>
+					<option value="<%= month%>"><%= month%>
 					<% }%>
 					</select>	
 					月
 					
-					<select name="product" size="1" onChange="change(this)">
+					<select name="day" size="1" onChange="change(this)">
 					<OPTION VALUE="">------------
-					<% for(int j = 1; j <= 31; j++) {%>
-					<option value="<%= j%>"><%= j%>
+					<% for(int day = 1; day <= 31; day++) {%>
+					<option value="<%= day%>"><%= day%>
 					<% }%>
 					</select>	
 					日
 					
-										<select name="product" size="1" onChange="change(this)">
+					<select name="hour" size="1" onChange="change(this)">
 					<OPTION VALUE="">------------
-					<% for(int j = 0; j <= 23; j++) {%>
-					<option value="<%= j%>"><%= j%>
+					<% for(int hour = 0; hour <= 23; hour++) {%>
+					<option value="<%= hour%>"><%= hour%>
 					<% }%>
 					</select>	
 					時					
 					
+					<input type="submit" value="move" name="move">
 				</form>
 				</p>
 			    <!-- グラフの id を指定して描画 -->
@@ -281,7 +315,7 @@ div.tab p {
 
 			<div id="tab3" class="tab">
 				<p>
-				<form>
+				<form name = "y">
 					<select name="product" size="1" onChange="change(this)">
 						<OPTION VALUE="">------------
 						<% for(int j = 2016; j < 2100; j++) {%>
@@ -296,10 +330,9 @@ div.tab p {
 					<option value="<%= j%>"><%= j%>
 					<% }%>
 					</select>
-					月　の稼働状況<br>
-					
+					月　の稼働状況<br>					
 					アスティの気候データに合わせています<br><br>
-	
+					
 				</form>
 				</p>
 			</div>
