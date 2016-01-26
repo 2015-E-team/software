@@ -1,5 +1,12 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@ page import="wine.PMF" %>
+<%@ page import="wine.SampleData" %>
+
+<%@ page import="javax.jdo.PersistenceManager" %>
+<%@ page import="javax.jdo.Query" %>
+<%@ page import="java.text.MessageFormat" %>
+<%@ page import="java.util.List" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -22,8 +29,8 @@
 <style type="text/css">
 <!-- /* 表示領域全体 */
 div.tabbox {
-	margin: 0px;
-	padding: 0px;
+	margin: 10px;
+	padding: 10px;
 	width: 700px;
 }
 
@@ -88,37 +95,141 @@ div.tab p {
 	margin: 0.5em;
 }
 -->
+
+button.button_nolink {
+    /* 文字サイズを1.4emに指定 */
+    font-size: 1.0em;
+
+    /* 文字の太さをboldに指定 */
+    font-weight: bold;
+
+    /* 縦方向に10px、
+     * 横方向に30pxの余白を指定 */
+    padding: 5px 10px;
+    
+    /* 背景色を濃い青色に指定 */
+    background-color: #cccccc;
+    
+    /* 文字色を白色に指定 */
+    color: #000;
+    
+    /* 角丸の指定 */
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+}
+
+button.button_link {
+    /* 文字サイズを1.4emに指定 */
+    font-size: 1.0em;
+
+    /* 文字の太さをboldに指定 */
+    font-weight: bold;
+
+    /* 縦方向に10px、
+     * 横方向に30pxの余白を指定 */
+    padding: 5px 10px;
+    
+    /* 背景色を濃い青色に指定 */
+    background-color: #ffe666;
+    
+    /* 角丸の指定 */
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+}
+button.button_link:hover {
+    /* 背景色を明るい青色に指定 */
+    background-color: #ffd500;
+}
+
+button.button_linktop {
+    /* 文字サイズを1.4emに指定 */
+    font-size: 1.0em;
+
+    /* 文字の太さをboldに指定 */
+    font-weight: bold;
+
+    /* 縦方向に10px、
+     * 横方向に30pxの余白を指定 */
+    padding: 5px 10px;
+    
+    /* 背景色を濃い青色に指定 */
+    background-color: #00d5ff;
+    
+    /* 角丸の指定 */
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+}
+button.button_linktop:hover {
+    /* 背景色を明るい青色に指定 */
+    background-color: #66b3ff;
+}
+
+button.button_linkhelp {
+    /* 文字サイズを1.4emに指定 */
+    font-size: 1.0em;
+
+    /* 文字の太さをboldに指定 */
+    font-weight: bold;
+
+    /* 縦方向に10px、
+     * 横方向に30pxの余白を指定 */
+    padding: 5px 10px;
+    
+    /* 背景色を濃い青色に指定 */
+    background-color:#ff9966;
+    
+    /* 角丸の指定 */
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+}
+button.button_linkhelp:hover {
+    /* 背景色を明るい青色に指定 */
+    background-color: #ffc1b3;
+}
+
 </style>
 
 <script type="text/javascript">
-    function ファイル読込(ファイル名, 読込後処理名) {
-        var 読込後処理
-            =  new Function("引数", "return " + 読込後処理名 + "(引数)");   
-        var httpObj = new XMLHttpRequest();
-        httpObj.open("GET", ファイル名, true);
-        httpObj.onreadystatechange = function() {
-            if (httpObj.readyState == 4) {
-                読込文 = httpObj.responseText;
-                読込後処理(読込文);
-            }
-        }
-        httpObj.send(null);
+    function ファイル読込(農家の地名,比較地名,selectedyear,selectedmonth) {
+    	例１(農家の地名,比較地名,selectedyear,selectedmonth);
     }
 </script>
 
 </head>
 <body>
-	<a href="../index.html">トップ</a>
+	<a href="../index.html">
+	<button class="button_linktop" type="submit">トップ</button>
+	</a>
 	<tr>
-		<th>小樽</th>
-		<th><a href="../Nigata/Nigata_tmp.jsp">新潟</a></th>
-		<th><a href="../Kofu/Kofu_tmp.jsp">甲府</a></th>
-		<th><a href="../Nara/Nara_tmp.jsp">奈良</a></th>
-		<th><a href="../Naha/Naha_tmp.jsp">那覇</a></th>
-		<th><a href="../help/help_top.jsp">ヘルプ</a></th>
+		<th>
+		<button class="button_nolink" type="submit" disabled="disabled">小樽</button>
+		</th>
+		
+		<th><a href="../Nigata/Nigata_tmp.jsp">
+		<button class="button_link" type="submit">新潟</button>
+		</a></th>
+		
+		<th><a href="../Kofu/Kofu_tmp.jsp">
+		<button class="button_link" type="submit">甲府</button>
+		</a></th>
+		
+		<th><a href="../Nara/Nara_tmp.jsp">
+		<button class="button_link" type="submit">奈良</button>
+		</a></th>
+		
+		<th><a href="../Naha/Naha_tmp.jsp">
+		<button class="button_link" type="submit">那覇</button>
+		</a></th>
+		
+		<th><a href="../help/help_top.jsp">
+		<button class="button_linkhelp" type="submit">ヘルプ</button>
+		</a></th>
 	</tr>
 	<tr>
-
 		<div class="tabbox">
 			<p class="tabs">
 				<a href="#tab1" class="tab1"
@@ -138,77 +249,212 @@ div.tab p {
 
 			<div id="tab3" class="tab">
 				<p>
-				<form>
-					<select name="product" size="1" onChange="change(this)">
-						<OPTION VALUE="">------------
-						<% for(int i = 2016; i < 2100; i++) {%>
-						<option value="<%= i%>"><%= i%>
-						<% }%>
-					</select>
-					年
+
+					<SCRIPT LANGUAGE="JavaScript">
+					<!--
+						mydate = new Date();
+						Ye = mydate.getFullYear() + "年";
+						Mo = mydate.getMonth() + 1 + "月";
+						Da = mydate.getDate() + "日";
+						Day = mydate.getDay();
+						Day2 = new Array(7);
+						Day2[0] = "日";
+						Day2[1] = "月";
+						Day2[2] = "火";
+						Day2[3] = "水";
+						Day2[4] = "木";
+						Day2[5] = "金";
+						Day2[6] = "土";
+						document
+								.write("<FONT style='font-size : 16px; color : #666666'>");
+						document.write("本日は" + Ye + Mo + Da + "（" + Day2[Day]
+								+ "）");
+						document.write("です</FONT>");
+					//-->
+					</SCRIPT>
+				<form name="date">
+					<select name="year" size="1" onChange="PutMoveTime()">
+						<OPTION VALUE="">
+							------------
+							<%
+							for (int i = 2010; i < 2100; i++) {
+						%>
 						
-					<select name="product" size="1" onChange="change(this)">
-					<OPTION VALUE="">------------
-					<% for(int i = 1; i <= 12; i++) {%>
-					<option value="<%= i%>"><%= i%>
-					<% }%>
-					</select>
-					月　の稼働状況<br>
-					
-					アスティの気候データに合わせています<br><br>
-					
+						<option value="<%= i%>"><%= i%>
+							<% }%>
+						
+					</select> 年 <select name="month" size="1" onChange="PutMoveTime()">
+						<OPTION VALUE="">
+							------------
+							<% for(int i = 1; i <= 12; i++) {%>
+						
+						<option value="<%= i%>"><%= i%>
+							<% }%>
+						
+					</select> 月 の稼働状況<br> アスティの気候データに合わせています<br> <br>
+
 					<script type="text/javascript">
 
-				    function 例１(読込文) {
-				        var 行列 = new Array();
-				        //var 行 = null;
-				        if (読込文.match(/\r/)){
-				        	var 行 = 読込文.split("\r\n");
-				        }// Ａ
-				        else{
-				        	行 = 読込文.split("\n");
-				         }
+				    function 例１(農家の地名,比較地名,selectedyear,selectedmonth) {
+				    	
+			        	var 表示内容_data = null;
+			        	
+			        	var 農家気温 = new Array();
+			        	var 農家湿度  = new Array();
+			        	var 比較地気温  = new Array();
+			        	var 比較地湿度  = new Array();
 
-				        var 行数 = 行.length;
-				        for (var i = 0; i < 行数; i++) {
-				            行列[i] = new Array();                              // Ｂ
-				        }
-
-				        var 最大列数 = 0;
-				        for (i = 0; i < 行数; i++) {
-				            var 列 = 行[i].split(",");                          // Ｃ
-				            var 列数 = 列.length;
-				            for (var j = 0; j < 列数; j++) {
-				                行列[i][j] = 列[j];                             // Ｄ
-				            }
-				            if (列数 > 最大列数) 最大列数 = 列数;               // Ｅ
-				        }
-
-				        
-				       /* var 表示内容 = "";
-				        for (i = 0; i < 行数; i++) {
-				            for (j = 0; j < 最大列数; j++) {
-				                表示内容 +=  "行列[" + i + "][" + j + "]=" + 行列[i][j] + ", ";
-				            }
-				            表示内容 +=  "<br>";
-				        }
-				        document.getElementById("例１表示場所").innerHTML = 表示内容;*/
+			        	var 暖房稼働時間 = 0;
+			        	var 冷房稼働時間 = 0;
+			        	var 加湿器稼働時間 = 0;
+			        	var 除湿器稼働時間 = 0;
+			        	
+			        	var 暖房稼働時間_分 = 0;
+			        	var 暖房稼働時間_時間 = 0;
+			        	var 冷房稼働時間_分 = 0;
+			        	var 冷房稼働時間_時間 = 0;
+			        	var 加湿器稼働時間_分 = 0;
+			        	var 加湿器稼働時間_時間 = 0;
+			        	var 除湿器稼働時間_分 = 0;
+			        	var 除湿器稼働時間_時間 = 0;
+			        	
+			        	var データ位置 = 0;
+			        	
+			        	var 農家init = null;
+			        	var 比較地init = null;
+			        	
+			        	var i = 0;
+			        	var j = 0;
+			        	
+			        	/*
+			        	var 今日の日 = mydate.getDate();
+			        	var 日付_data = "2014/" + selectedmonth + "/1" ;//途中
+			        	*/
+			        	
+			        	var 表示内容_data = null;
+			        	<%PersistenceManager pm = null;
+		          		
+		        		try {
+		            		pm = PMF.get().getPersistenceManager();
+		            		Query query = pm.newQuery(SampleData.class);
+		            		query.setOrdering("r_date asc");
+		            		List<SampleData> datas = (List<SampleData>) query.execute();
+		            		
+		        			// すべてのエンティティの表示
+		        			for (SampleData da : datas) {%>
+		        				if(<%=da.getName().equals("otaru")%>){
+	        				
+        							if(農家init == null){
+        								農家init = データ位置;
+        							}
+        				
+        						農家気温[i] = <%=da.getTem()%>;
+        						農家湿度[i] = <%=da.getHum()%>;
+        						i++;
+        						}
+        						if(<%=da.getName().equals("asti")%>) {
+        					
+        							if(比較地init == null){
+        								比較地init = データ位置;
+        							}
+        					
+		        					比較地気温[j] = (5/9)*(<%=da.getTem()%>-32);
+		        					比較地湿度[j] =<%=da.getHum()%>;
+		        				j++;
+        						}
+        					データ位置++;
+		        			<%}%>
+		        			var 比較地データ位置 = 0;
+		        			if(selectedyear != 2014 || selectedmonth != 1){
+		        				表示内容_data =　"データがありません";
+		        			}
+		        			else{
+		        				for(var i = 0;i < mydate.getDate() *24-1; i++){
+		        					if(農家気温[i] - 比較地気温[i] > 0){
+		        						冷房稼働時間 += (農家気温[i] - 比較地気温[i])/0.4;
+		        					}
+		        					else{
+		        						暖房稼働時間 += (比較地気温[i] - 農家気温[i])/0.4;
+		        					}
+		        					
+		        					if(農家湿度[i] - 比較地湿度[i] > 0){
+		        						除湿器稼働時間 += (農家湿度[i] - 比較地湿度[i])/1;
+		        					}
+		        					else{
+		        						加湿器稼働時間 += (比較地湿度[i] - 農家湿度[i])/1;
+		        					}
+		        				}
+		        				
+		        				暖房稼働時間_時間 = parseInt(暖房稼働時間/60);
+		        				暖房稼働時間_分 = parseInt(暖房稼働時間 % 60);
+		        				
+		        				冷房稼働時間_時間 = parseInt(冷房稼働時間/60);
+		        				冷房稼働時間_分 = parseInt(冷房稼働時間 % 60);
+		        				
+		        				除湿器稼働時間_時間 = parseInt(除湿器稼働時間/60);
+		        				除湿器稼働時間_分 = parseInt(除湿器稼働時間 % 60);
+		        				
+		        				加湿器稼働時間_時間 = parseInt(加湿器稼働時間/60);
+		        				加湿器稼働時間_分 = parseInt(加湿器稼働時間 % 60);
+		        				
+			        			表示内容_data = "暖房稼働合計:　" + 暖房稼働時間_時間 + "時間" + 暖房稼働時間_分 +"分<br>"
+       							 + "冷房稼働合計:　" + 冷房稼働時間_時間 + "時間" + 冷房稼働時間_分 +"分<br>"
+       							 + "除湿器稼働合計:　" + 除湿器稼働時間_時間 + "時間" + 除湿器稼働時間_分 +"分<br>"
+       							 + "加湿器稼働合計:　" + 加湿器稼働時間_時間 + "時間" + 加湿器稼働時間_分 +"分<br>";
+		        			}
+		        			
+		        			
+		        			
+		        			/* for(var i = 0; i < 1000; i++){
+		        				表示内容_data += 農家気温[i] + ",";
+		        				表示内容_data += 農家湿度[i] + " ";
+		        				表示内容_data += 比較地気温[i] + ",";
+		        				表示内容_data += 比較地湿度[i] + "<br>";
+		        			}
+		        			
+		        			表示内容_data += 農家init + "<br>";
+		        			表示内容_data += 比較地init + "<br>";
+		        			表示内容_data += データ位置 + "<br>" ; */
+		        			
+		        		<%} finally {
+		            	if (pm != null && !pm.isClosed())
+		               	pm.close();
+		        		}%>
+			        	
+		        		
+				        document.getElementById("例１表示場所").innerHTML = 表示内容_data;
 				    }
 				</script>
 
-				<!--
+					<!--
 				<p><input type="button" value="例１表示"
 				    onClick="ファイル読込('../plain_csv.csv', '例１')"></input></p>
 				<div id="例１表示場所"></div>
 				-->
+				<script>
+				function PutMoveTime(){
 					
-					暖房稼働合計：　＊＊時間＊＊分<br>
-					冷房稼働合計：　＊＊時間＊＊分<br>
-					加湿器稼働合計：＊＊時間＊＊分<br>
-					除湿機稼働合計：＊＊時間＊＊分<br>
-	
+					if(    document.date.year.selectedIndex == 0 ||
+							document.date.month.selectedIndex == 0){
+						var 表示内容_nodata = "表示する年と月を指定してください";
+					    document.getElementById("例１表示場所").innerHTML = 表示内容_nodata;
+					}
+					else{
+						//表示内容_nodata = document.date.year.selectedIndex + 2015 + "年" + document.date.month.selectedIndex + "月";
+						var 表示内容_data = null;
+			        	
+			        	表示内容_data = "a"
+			        	
+			        		document.getElementById("例１表示場所").innerHTML = 表示内容_data;
+						ファイル読込("otaru","asti",document.date.year.selectedIndex+2009,document.date.month.selectedIndex);
+					}
+				}
+				</script>
+					<div id="例１表示場所">
+					</div>
+					
 				</form>
-				
+
 				</p>
 			</div>
 

@@ -16,30 +16,23 @@ public class SampleData {
 	private Long key;
 
 	//プライマリキーであることを示すもの．フィールドの名の前につける
-	//地域名
 	@Persistent
 	private String name;
 	
-	//データの日にち
 	@Persistent
 	private String date;
 	
-	//温度
 	@Persistent
 	private double tem;
 	
-	//湿度
 	@Persistent
 	private int hum;
 	
-	//データを登録した時間
 	@Persistent
 	private Date r_date;
 	
-	//引数なしコンストラクタ
 	public SampleData(){}
 	
-	//
 	public SampleData(String name, String date, double tem, int hum, Date r_date){
 		this.name = name;
 		this.date = date;
