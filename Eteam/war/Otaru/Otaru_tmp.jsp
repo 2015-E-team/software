@@ -22,8 +22,8 @@
 <style type="text/css">
 <!-- /* 表示領域全体 */
 div.tabbox {
-	margin: 0px;
-	padding: 0px;
+	margin: 10px;
+	padding: 10px;
 	width: 700px;
 }
 
@@ -88,6 +88,102 @@ div.tab p {
 	margin: 0.5em;
 }
 -->
+
+button.button_nolink {
+    /* 文字サイズを1.4emに指定 */
+    font-size: 1.0em;
+
+    /* 文字の太さをboldに指定 */
+    font-weight: bold;
+
+    /* 縦方向に10px、
+     * 横方向に30pxの余白を指定 */
+    padding: 5px 10px;
+    
+    /* 背景色を濃い青色に指定 */
+    background-color: #cccccc;
+    
+    /* 文字色を白色に指定 */
+    color: #000;
+    
+    /* 角丸の指定 */
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+}
+
+button.button_link {
+    /* 文字サイズを1.4emに指定 */
+    font-size: 1.0em;
+
+    /* 文字の太さをboldに指定 */
+    font-weight: bold;
+
+    /* 縦方向に10px、
+     * 横方向に30pxの余白を指定 */
+    padding: 5px 10px;
+    
+    /* 背景色を濃い青色に指定 */
+    background-color: #ffe666;
+    
+    /* 角丸の指定 */
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+}
+button.button_link:hover {
+    /* 背景色を明るい青色に指定 */
+    background-color: #ffd500;
+}
+
+button.button_linktop {
+    /* 文字サイズを1.4emに指定 */
+    font-size: 1.0em;
+
+    /* 文字の太さをboldに指定 */
+    font-weight: bold;
+
+    /* 縦方向に10px、
+     * 横方向に30pxの余白を指定 */
+    padding: 5px 10px;
+    
+    /* 背景色を濃い青色に指定 */
+    background-color: #00d5ff;
+    
+    /* 角丸の指定 */
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+}
+button.button_linktop:hover {
+    /* 背景色を明るい青色に指定 */
+    background-color: #66b3ff;
+}
+
+button.button_linkhelp {
+    /* 文字サイズを1.4emに指定 */
+    font-size: 1.0em;
+
+    /* 文字の太さをboldに指定 */
+    font-weight: bold;
+
+    /* 縦方向に10px、
+     * 横方向に30pxの余白を指定 */
+    padding: 5px 10px;
+    
+    /* 背景色を濃い青色に指定 */
+    background-color:#ff9966;
+    
+    /* 角丸の指定 */
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+}
+button.button_linkhelp:hover {
+    /* 背景色を明るい青色に指定 */
+    background-color: #ffc1b3;
+}
+
 </style>
 
 <script type="text/javascript">
@@ -108,17 +204,35 @@ div.tab p {
 
 </head>
 <body>
-	<a href="../index.html">トップ</a>
+	<a href="../index.html">
+	<button class="button_linktop" type="submit">トップ</button>
+	</a>
 	<tr>
-		<th>小樽</th>
-		<th><a href="../Nigata/Nigata_tmp.jsp">新潟</a></th>
-		<th><a href="../Kofu/Kofu_tmp.jsp">甲府</a></th>
-		<th><a href="../Nara/Nara_tmp.jsp">奈良</a></th>
-		<th><a href="../Naha/Naha_tmp.jsp">那覇</a></th>
-		<th><a href="../help/help_top.jsp">ヘルプ</a></th>
+		<th>
+		<button class="button_nolink" type="submit" disabled="disabled">小樽</button>
+		</th>
+		
+		<th><a href="../Nigata/Nigata_tmp.jsp">
+		<button class="button_link" type="submit">新潟</button>
+		</a></th>
+		
+		<th><a href="../Kofu/Kofu_tmp.jsp">
+		<button class="button_link" type="submit">甲府</button>
+		</a></th>
+		
+		<th><a href="../Nara/Nara_tmp.jsp">
+		<button class="button_link" type="submit">奈良</button>
+		</a></th>
+		
+		<th><a href="../Naha/Naha_tmp.jsp">
+		<button class="button_link" type="submit">那覇</button>
+		</a></th>
+		
+		<th><a href="../help/help_top.jsp">
+		<button class="button_linkhelp" type="submit">ヘルプ</button>
+		</a></th>
 	</tr>
 	<tr>
-
 		<div class="tabbox">
 			<p class="tabs">
 				<a href="#tab1" class="tab1"
@@ -138,28 +252,54 @@ div.tab p {
 
 			<div id="tab3" class="tab">
 				<p>
-				<form>
-					<select name="product" size="1" onChange="change(this)">
-						<OPTION VALUE="">------------
-						<% for(int i = 2016; i < 2100; i++) {%>
-						<option value="<%= i%>"><%= i%>
-						<% }%>
-					</select>
-					年
+
+					<SCRIPT LANGUAGE="JavaScript">
+					<!--
+						mydate = new Date();
+						Ye = mydate.getFullYear() + "年";
+						Mo = mydate.getMonth() + 1 + "月";
+						Da = mydate.getDate() + "日";
+						Day = mydate.getDay();
+						Day2 = new Array(7);
+						Day2[0] = "日";
+						Day2[1] = "月";
+						Day2[2] = "火";
+						Day2[3] = "水";
+						Day2[4] = "木";
+						Day2[5] = "金";
+						Day2[6] = "土";
+						document
+								.write("<FONT style='font-size : 16px; color : #666666'>");
+						document.write("本日は" + Ye + Mo + Da + "（" + Day2[Day]
+								+ "）");
+						document.write("です</FONT>");
+					//-->
+					</SCRIPT>
+				<form name="date">
+					<select name="year" size="1" onChange="PutMoveTime()">
+						<OPTION VALUE="">
+							------------
+							<%
+							for (int i = 2016; i < 2100; i++) {
+						%>
 						
-					<select name="product" size="1" onChange="change(this)">
-					<OPTION VALUE="">------------
-					<% for(int i = 1; i <= 12; i++) {%>
-					<option value="<%= i%>"><%= i%>
-					<% }%>
-					</select>
-					月　の稼働状況<br>
-					
-					アスティの気候データに合わせています<br><br>
-					
+						<option value="<%= i%>"><%= i%>
+							<% }%>
+						
+					</select> 年 <select name="month" size="1" onChange="PutMoveTime()">
+						<OPTION VALUE="">
+							------------
+							<% for(int i = 1; i <= 12; i++) {%>
+						
+						<option value="<%= i%>"><%= i%>
+							<% }%>
+						
+					</select> 月 の稼働状況<br> アスティの気候データに合わせています<br> <br>
+
 					<script type="text/javascript">
 
 				    function 例１(読込文) {
+				    	
 				        var 行列 = new Array();
 				        //var 行 = null;
 				        if (読込文.match(/\r/)){
@@ -185,30 +325,65 @@ div.tab p {
 				        }
 
 				        
-				       /* var 表示内容 = "";
+				        var danbou_h = 行列[0][0];
+						 var danbou_m = 行列[0][1];
+						 var reibou_h = 行列[0][2];
+						 var reibou_m = 行列[1][0];
+						 var joshitsu_h = 行列[1][1];
+						 var joshitsu_m = 行列[1][2];
+						 var kashitsu_h = 行列[2][0];
+						 var kashitsu_m = 行列[2][1];
+						 
+				        var 表示内容_data = "　暖房稼働合計　：　" + String(danbou_h) + "時間" + String(danbou_m) +"分" + "<br>" +
+						　 						"　冷房稼働合計　：　" + String(reibou_h) + "時間" + String(reibou_m) + "分" + "<br>" +
+						   						"　加湿器稼働合計：　" + String(joshitsu_h) + "時間" + String(joshitsu_m) + "分" + "<br>" +
+						   						"　除湿機稼働合計：　" + String(kashitsu_h) + "時間" + String(kashitsu_m) + "分";
+				        
+				        
+				        /*var 表示内容_data = "";
+				        
 				        for (i = 0; i < 行数; i++) {
 				            for (j = 0; j < 最大列数; j++) {
-				                表示内容 +=  "行列[" + i + "][" + j + "]=" + 行列[i][j] + ", ";
+				                表示内容_data +=  "行列[" + i + "][" + j + "]=" + 行列[i][j] + ", ";
 				            }
-				            表示内容 +=  "<br>";
-				        }
-				        document.getElementById("例１表示場所").innerHTML = 表示内容;*/
+				            表示内容_data +=  "<br>";
+				        }*/
+				        document.getElementById("例１表示場所").innerHTML = 表示内容_data;
 				    }
 				</script>
 
-				<!--
+					<!--
 				<p><input type="button" value="例１表示"
 				    onClick="ファイル読込('../plain_csv.csv', '例１')"></input></p>
 				<div id="例１表示場所"></div>
 				-->
+				<script>
+				function PutMoveTime(){
 					
-					暖房稼働合計：　＊＊時間＊＊分<br>
-					冷房稼働合計：　＊＊時間＊＊分<br>
-					加湿器稼働合計：＊＊時間＊＊分<br>
-					除湿機稼働合計：＊＊時間＊＊分<br>
-	
+					if(    document.date.year.selectedIndex == 0 ||
+							document.date.month.selectedIndex == 0){
+						var 表示内容_nodata = "表示する年と月を指定してください"
+					    document.getElementById("例１表示場所").innerHTML = 表示内容_nodata;
+					}
+					else{
+						//表示内容_nodata = document.date.year.selectedIndex + 2015 + "年" + document.date.month.selectedIndex + "月";
+						var ファイル名 = "../plain";
+						if(document.date.month.selectedIndex == 1){
+							ファイル名+= "1.csv";
+						}
+						else{
+							ファイル名+= "2.csv";
+						}
+						ファイル読込(ファイル名, '例１');
+					}
+					
+				}
+				</script>
+					<div id="例１表示場所">
+					</div>
+					
 				</form>
-				
+
 				</p>
 			</div>
 
