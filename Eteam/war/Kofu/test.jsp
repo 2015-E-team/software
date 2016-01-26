@@ -86,11 +86,7 @@
 						double tmp = (da.getTem() - 32) / 1.8;
 						asti_tem.add(tmp);
 					}
-                	
-                	if(da.getDate() == "2014/1/1 00:00:00")
-                		end = 744;                		
-					
-
+                						
 					if(i >= end){
 						if(da.getName().equals("otaru")){%>
 							['<%= da.getDate() %>', <%=asti_tem.get(tem_count)%>, <%=da.getTem()%>],

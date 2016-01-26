@@ -68,7 +68,7 @@ public class SampleData {
 		this.date = date;
 	}
 
-	public void setTem(float tem){
+	public void setTem(double tem){
 		this.tem = tem;
 	}
 	
