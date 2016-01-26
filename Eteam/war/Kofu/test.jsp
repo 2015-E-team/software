@@ -20,6 +20,10 @@
 	
 	if( str != null && next != null )
 		end = Integer.parseInt(str) + 4;
+	
+	if( str != null && pre != null )
+		end = Integer.parseInt(str) - 4;
+
 
 %>
 
@@ -53,6 +57,9 @@
         			for (SampleData da : datas) {
                 	if(i == end + 4 )
                 		break;
+                	
+//                	if(da.getDate() == "2014/1/1 01:00:00")
+//                		end = 0;                		
 
 					if(i >= end){%>        					
               			['<%= da.getDate() %>', <%= da.getTem() %>],
