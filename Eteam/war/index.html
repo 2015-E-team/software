@@ -6,20 +6,97 @@
 <!-- with a "Standards Mode" doctype is supported, -->
 <!-- but may lead to some differences in layout.   -->
 
+
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-    <title>トップ</title>
+    <title>トップ画面</title>
   </head>
 
   <body>
+  <TABLE border="1" align="left" bgcolor="#FFFF99">
       <tr>
-        <th><a href="./help/help_top.jsp">ヘルプ</a></th>
+        <th><a href="./">トップ</a></th>
         <th><a href="./Otaru/Otaru_tmp.jsp">小樽</a></th>
         <th><a href="./Nigata/Nigata_tmp.jsp">新潟</a></th>
         <th><a href="./Kofu/Kofu_tmp.jsp">甲府</a></th>
         <th><a href="./Nara/Nara_tmp.jsp">奈良</a></th>
         <th><a href="./Naha/Naha_tmp.jsp">那覇</a></th>
       </tr>
+</TABLE>
+  <TABLE border="1" align="right" bgcolor="#FFFF99">
+      <tr>
+		 <th><a href="./help/help_top.jsp">ヘルプ</a></th>
+		</tr>
+  </TABLE>
+  
+
+<script>
+
+//今日の日付データを変数hidukeに格納
+var hiduke=new Date(); 
+
+//年・月・日・曜日を取得する
+var year = hiduke.getFullYear();
+var month = hiduke.getMonth()+1;
+var week = hiduke.getDay();
+var day = hiduke.getDate();
+var hour = hiduke.getHours();
+var minute = hiduke.getMinutes();
+
+var yobi= new Array("日","月","火","水","木","金","土");
+document.open();
+document.write("<br><br>");
+document.write("西暦"+year+"年"+month+"月"+day+"日 "+yobi[week]+"曜日");
+document.write("<br>");
+document.write(hour+"時"+minute+"分<br>");
+document.close();
+var windowWidth = (window.innerWidth||document.documentElement.clientWidth||0);
+
+</script>
+      
+      <script src="https://www.google.com/jsapi"></script>
+<script>
+google.load('visualization', '1', {packages:['geochart']});
+google.setOnLoadCallback(graphChart);
+
+function graphChart() {
+
+	var data = google.visualization.arrayToDataTable([
+		['場所', '気温(℃)', "湿度(%)"],
+		['小樽', 20, 30],
+		['新潟', 20, 30],
+		['甲府', 20, 30],
+		['奈良', 20, 30],
+		['那覇', 20, 30]
+	]);
+	
+	//ウィンドウサイズの取得
+	var windowWidth = (window.innerWidth||document.documentElement.clientWidth||0);
+	
+	//グラフ表示の設定
+	var option = {
+		region: 'JP', //表示する地図を日本に指定
+		width    : windowWidth + 'px',
+		displayMode: 'markers', //表示方式の設定
+		legend: 'none'//凡例の非表示
+	};
+	
+	var graph = new google.visualization.GeoChart(document.getElementById('drawChart'));
+	graph.draw(data, option);
+	
+	//クリック時のイベント処理の設定
+	google.visualization.events.addListener( graph, 'select',
+		    function( e )
+		    {
+		        alert( 'エアコン稼働時間 :10\n加湿器稼働時間：10' );
+		    }
+		);
+
+} 
+</script>
+
+<div id="drawChart"></div>
+
   </body>
 </html>

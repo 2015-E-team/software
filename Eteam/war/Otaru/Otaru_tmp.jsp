@@ -194,21 +194,8 @@ button.button_linkhelp:hover {
 </style>
 
 <script type="text/javascript">
-    function ファイル読込(ファイル位置/*, 読込後処理名*/) {
-        /*var 読込後処理
-            =  new Function("引数", "return " + 読込後処理名 + "(引数)");   
-        /*var httpObj = new XMLHttpRequest();
-        httpObj.open("GET", ファイル名, true);
-        httpObj.onreadystatechange = function() {
-            if (httpObj.readyState == 4) {
-                読込文 = httpObj.responseText
-                読込後処理(読込文);
-            }
-        }
-        httpObj.send(null);
-        例１(ファイル名);
-    	*/
-    	例１(ファイル位置);
+    function ファイル読込(農家の地名,比較地名,selectedyear,selectedmonth) {
+    	例１(農家の地名,比較地名,selectedyear,selectedmonth);
     }
 </script>
 
@@ -290,7 +277,7 @@ button.button_linkhelp:hover {
 						<OPTION VALUE="">
 							------------
 							<%
-							for (int i = 2016; i < 2100; i++) {
+							for (int i = 2010; i < 2100; i++) {
 						%>
 						
 						<option value="<%= i%>"><%= i%>
@@ -308,78 +295,133 @@ button.button_linkhelp:hover {
 
 					<script type="text/javascript">
 
-				    function 例１(/*読込文*/ファイル位置) {
+				    function 例１(農家の地名,比較地名,selectedyear,selectedmonth) {
 				    	
-				    	/*
-				        var 行列 = new Array();
-				        //var 行 = null;
-				        if (読込文.match(/\r/)){
-				        	var 行 = 読込文.split("\r\n");
-				        }// Ａ
-				        else{
-				        	行 = 読込文.split("\n");
-				         }
-
-				        var 行数 = 行.length;
-				        for (var i = 0; i < 行数; i++) {
-				            行列[i] = new Array();                              // Ｂ
-				        }
-
-				        var 最大列数 = 0;
-				        for (i = 0; i < 行数; i++) {
-				            var 列 = 行[i].split(",");                          // Ｃ
-				            var 列数 = 列.length;
-				            for (var j = 0; j < 列数; j++) {
-				                行列[i][j] = 列[j];                             // Ｄ
-				            }
-				            if (列数 > 最大列数) 最大列数 = 列数;               // Ｅ
-				        }
-				        
-				        var danbou_h = 行列[0][0];
-						 var danbou_m = 行列[0][1];
-						 var reibou_h = 行列[0][2];
-						 var reibou_m = 行列[1][0];
-						 var joshitsu_h = 行列[1][1];
-						 var joshitsu_m = 行列[1][2];
-						 var kashitsu_h = 行列[2][0];
-						 var kashitsu_m = 行列[2][1];
-						 
-				        var 表示内容_data = "　暖房稼働合計　：　" + String(danbou_h) + "時間" + String(danbou_m) +"分" + "<br>" +
-						　 						"　冷房稼働合計　：　" + String(reibou_h) + "時間" + String(reibou_m) + "分" + "<br>" +
-						   						"　加湿器稼働合計：　" + String(joshitsu_h) + "時間" + String(joshitsu_m) + "分" + "<br>" +
-						   						"　除湿機稼働合計：　" + String(kashitsu_h) + "時間" + String(kashitsu_m) + "分";
-			        	*/
 			        	var 表示内容_data = null;
-			        	<%
-		        		PersistenceManager pm = null;
+			        	
+			        	var 農家気温 = new Array();
+			        	var 農家湿度  = new Array();
+			        	var 比較地気温  = new Array();
+			        	var 比較地湿度  = new Array();
+
+			        	var 暖房稼働時間 = 0;
+			        	var 冷房稼働時間 = 0;
+			        	var 加湿器稼働時間 = 0;
+			        	var 除湿器稼働時間 = 0;
+			        	
+			        	var 暖房稼働時間_分 = 0;
+			        	var 暖房稼働時間_時間 = 0;
+			        	var 冷房稼働時間_分 = 0;
+			        	var 冷房稼働時間_時間 = 0;
+			        	var 加湿器稼働時間_分 = 0;
+			        	var 加湿器稼働時間_時間 = 0;
+			        	var 除湿器稼働時間_分 = 0;
+			        	var 除湿器稼働時間_時間 = 0;
+			        	
+			        	var データ位置 = 0;
+			        	
+			        	var 農家init = null;
+			        	var 比較地init = null;
+			        	
+			        	var i = 0;
+			        	var j = 0;
+			        	
+			        	/*
+			        	var 今日の日 = mydate.getDate();
+			        	var 日付_data = "2014/" + selectedmonth + "/1" ;//途中
+			        	*/
+			        	
+			        	var 表示内容_data = null;
+			        	<%PersistenceManager pm = null;
 		          		
 		        		try {
 		            		pm = PMF.get().getPersistenceManager();
 		            		Query query = pm.newQuery(SampleData.class);
+		            		query.setOrdering("r_date asc");
 		            		List<SampleData> datas = (List<SampleData>) query.execute();
+		            		
 		        			// すべてのエンティティの表示
-		        			for (SampleData da : datas) {
-		        		%>
-		        		if('<%= da.getDate() %>' == "2014/1/5 12:00:00")
-							表示内容_data = '<%=da.getDate()%>'+ "<br>";
-		        			<%
-		            		}
-		        			%>
-		        			表示内容_data += '<%=datas.get(5).getDate()%>';
-		        			<%
-		        		} finally {
+		        			for (SampleData da : datas) {%>
+		        				if(<%=da.getName().equals("otaru")%>){
+	        				
+        							if(農家init == null){
+        								農家init = データ位置;
+        							}
+        				
+        						農家気温[i] = <%=da.getTem()%>;
+        						農家湿度[i] = <%=da.getHum()%>;
+        						i++;
+        						}
+        						if(<%=da.getName().equals("asti")%>) {
+        					
+        							if(比較地init == null){
+        								比較地init = データ位置;
+        							}
+        					
+		        					比較地気温[j] = (5/9)*(<%=da.getTem()%>-32);
+		        					比較地湿度[j] =<%=da.getHum()%>;
+		        				j++;
+        						}
+        					データ位置++;
+		        			<%}%>
+		        			var 比較地データ位置 = 0;
+		        			if(selectedyear != 2014 || selectedmonth != 1){
+		        				表示内容_data =　"データがありません";
+		        			}
+		        			else{
+		        				for(var i = 0;i < mydate.getDate() *24-1; i++){
+		        					if(農家気温[i] - 比較地気温[i] > 0){
+		        						冷房稼働時間 += (農家気温[i] - 比較地気温[i])/0.4;
+		        					}
+		        					else{
+		        						暖房稼働時間 += (比較地気温[i] - 農家気温[i])/0.4;
+		        					}
+		        					
+		        					if(農家湿度[i] - 比較地湿度[i] > 0){
+		        						除湿器稼働時間 += (農家湿度[i] - 比較地湿度[i])/1;
+		        					}
+		        					else{
+		        						加湿器稼働時間 += (比較地湿度[i] - 農家湿度[i])/1;
+		        					}
+		        				}
+		        				
+		        				暖房稼働時間_時間 = parseInt(暖房稼働時間/60);
+		        				暖房稼働時間_分 = parseInt(暖房稼働時間 % 60);
+		        				
+		        				冷房稼働時間_時間 = parseInt(冷房稼働時間/60);
+		        				冷房稼働時間_分 = parseInt(冷房稼働時間 % 60);
+		        				
+		        				除湿器稼働時間_時間 = parseInt(除湿器稼働時間/60);
+		        				除湿器稼働時間_分 = parseInt(除湿器稼働時間 % 60);
+		        				
+		        				加湿器稼働時間_時間 = parseInt(加湿器稼働時間/60);
+		        				加湿器稼働時間_分 = parseInt(加湿器稼働時間 % 60);
+		        				
+			        			表示内容_data = "暖房稼働合計:　" + 暖房稼働時間_時間 + "時間" + 暖房稼働時間_分 +"分<br>"
+       							 + "冷房稼働合計:　" + 冷房稼働時間_時間 + "時間" + 冷房稼働時間_分 +"分<br>"
+       							 + "除湿器稼働合計:　" + 除湿器稼働時間_時間 + "時間" + 除湿器稼働時間_分 +"分<br>"
+       							 + "加湿器稼働合計:　" + 加湿器稼働時間_時間 + "時間" + 加湿器稼働時間_分 +"分<br>";
+		        			}
+		        			
+		        			
+		        			
+		        			/* for(var i = 0; i < 1000; i++){
+		        				表示内容_data += 農家気温[i] + ",";
+		        				表示内容_data += 農家湿度[i] + " ";
+		        				表示内容_data += 比較地気温[i] + ",";
+		        				表示内容_data += 比較地湿度[i] + "<br>";
+		        			}
+		        			
+		        			表示内容_data += 農家init + "<br>";
+		        			表示内容_data += 比較地init + "<br>";
+		        			表示内容_data += データ位置 + "<br>" ; */
+		        			
+		        		<%} finally {
 		            	if (pm != null && !pm.isClosed())
 		               	pm.close();
-		        		}
-		        		%>
-				        
-		        		/*var 表示内容_data = "";
-				        for (i = 0; i < 行数; i++) {
-				            for (j = 0; j < 最大列数; j++) {
-				                表示内容_data +=  "行列[" + i + "][" + j + "]=" + 行列[i][j] + ", ";
-				            }
-				            表示内容_data +=  "<br>";
-				        }*/
+		        		}%>
+			        	
+		        		
 				        document.getElementById("例１表示場所").innerHTML = 表示内容_data;
 				    }
 				</script>
@@ -391,40 +433,20 @@ button.button_linkhelp:hover {
 				-->
 				<script>
 				function PutMoveTime(){
-					/*if(    document.date.year.selectedIndex == 0 ||
-							document.date.month.selectedIndex == 0){
-						var 表示内容_nodata = "表示する年と月を指定してください"
-					    document.getElementById("例１表示場所").innerHTML = 表示内容_nodata;
-					}
-					else{
-						//表示内容_nodata = document.date.year.selectedIndex + 2015 + "年" + document.date.month.selectedIndex + "月";
-						var ファイル名 = "../plain";
-						if(document.date.month.selectedIndex == 1){
-							ファイル名+= "1.csv";
-						}
-						else{
-							ファイル名+= "2.csv";
-						}
-						ファイル読込(ファイル名, '例１');
-					}
-					*/
 					
 					if(    document.date.year.selectedIndex == 0 ||
 							document.date.month.selectedIndex == 0){
-						var 表示内容_nodata = "表示する年と月を指定してください"
+						var 表示内容_nodata = "表示する年と月を指定してください";
 					    document.getElementById("例１表示場所").innerHTML = 表示内容_nodata;
 					}
 					else{
 						//表示内容_nodata = document.date.year.selectedIndex + 2015 + "年" + document.date.month.selectedIndex + "月";
-						var 年データ数 = 744;
-						var 月データ数 = 743;
-						var 日データ数 = 24;
-						var データ開始年度 = 2014;
-						var プルダウン開始年度 = 2016;
-						var ファイル位置 = 
-							document.date.year.selectedIndex ;
-						
-						ファイル読込(ファイル位置);
+						var 表示内容_data = null;
+			        	
+			        	表示内容_data = "a"
+			        	
+			        		document.getElementById("例１表示場所").innerHTML = 表示内容_data;
+						ファイル読込("otaru","asti",document.date.year.selectedIndex+2009,document.date.month.selectedIndex);
 					}
 				}
 				</script>
