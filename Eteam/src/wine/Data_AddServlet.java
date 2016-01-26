@@ -61,7 +61,7 @@ public class Data_AddServlet extends HttpServlet {
 
 						if (split != null && split.length == 4 && split[1].startsWith("2")) {
 							// csvから日付の取り出し
-							String key = split[0].trim();
+							String name = split[0].trim();
 							String date = split[1].trim();
 							// csvから温度の取り出し
 							double tem = Double.parseDouble(split[2].trim());
@@ -71,7 +71,7 @@ public class Data_AddServlet extends HttpServlet {
 						//	System.out.println("地点: " + key + "日付: "+ date + "気温: " + tem + "hum: " + hum);
 							
 							// 登録するモデル
-							SampleData data = new SampleData(key, date, tem, hum, new Date());
+							SampleData data = new SampleData(name, date, tem, hum, new Date());
 							if (pm == null) {
 								pm = PMF.get().getPersistenceManager();
 							}

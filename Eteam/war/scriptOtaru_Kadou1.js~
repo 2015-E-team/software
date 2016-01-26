@@ -1,0 +1,1 @@
+document.write("JavaScriptを使って出力しています。");

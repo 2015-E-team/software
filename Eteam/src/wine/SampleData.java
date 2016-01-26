@@ -10,13 +10,16 @@ import javax.jdo.annotations.*;
 public class SampleData {
 	
 	//フィールド名の前につける．永続化されることを示す
+	@PrimaryKey
 	@Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
 	//自動割付されるID番号(Long値)プライマリーキーとして使うもの
+	private Long key;
 	
-	private String key;
+	@Persistent
+	private String name;
 
 	//プライマリキーであることを示すもの．フィールドの名の前につける
-	@PrimaryKey
+	@Persistent
 	private String date;
 	
 	@Persistent
@@ -30,16 +33,16 @@ public class SampleData {
 	
 	public SampleData(){}
 	
-	public SampleData(String key, String date, double tem, int hum, Date r_date){
-		this.key = key;
+	public SampleData(String name, String date, double tem, int hum, Date r_date){
+		this.name = name;
 		this.date = date;
 		this.tem = tem;
 		this.hum = hum;
 		this.r_date = r_date;
 	}
 	
-	public String getKey(){
-		return key;
+	public String getName(){
+		return name;
 	}
 	
 	public String getDate(){
@@ -58,8 +61,8 @@ public class SampleData {
 		return r_date;
 	}
 	
-	public void setKey(String key){
-		this.key = key;
+	public void setName(String name){
+		this.name = name;
 	}
 	public void setDate(String date){
 		this.date = date;
