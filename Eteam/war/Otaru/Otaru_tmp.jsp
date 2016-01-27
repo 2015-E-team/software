@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
+    pageEncoding="UTF-8"%>
+    
 <%@ page import="wine.PMF" %>
 <%@ page import="wine.SampleData" %>
 
@@ -7,11 +8,121 @@
 <%@ page import="javax.jdo.Query" %>
 <%@ page import="java.text.MessageFormat" %>
 <%@ page import="java.util.List" %>
+<%@ page import="java.util.ArrayList" %>
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+
 <html>
 <head>
+<% 
+	int start = 0;
+	int t_end = 2232; 
+
+	String t_str = request.getParameter("t_end");
+	String t_next = request.getParameter("t_next");
+	String t_pre = request.getParameter("t_pre");
+	
+	String t_year = request.getParameter("t_year");
+	String t_month = request.getParameter("t_month");
+	String t_day = request.getParameter("t_day");
+	String t_hour = request.getParameter("t_hour");
+	
+		
+	if(t_year != null && t_month != null && t_day != null && t_hour != null){
+		t_end = (Integer.parseInt(t_day) - 1) * 24 + Integer.parseInt(t_hour) + 2232;
+ 		if(t_end >= 2970)
+ 			t_end = 2970;
+	}
+
+	if( t_str != null && t_next != null )
+		if(Integer.parseInt(t_str) < 2964)
+			t_end = Integer.parseInt(t_str) + 6;
+		else 
+			t_end = 2970;
+	
+	if( t_str != null && t_pre != null ){
+		if(Integer.parseInt(t_str) >= 2239)
+			t_end = Integer.parseInt(t_str) - 6;
+		else 
+			t_end = 2232;
+	}
+%>
+
+
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>小樽</title>
+
+	<!--Load the AJAX API-->
+
+	
+  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+    
+    var windowWidth = (window.innerWidth||document.documentElement.clientWidth||0);
+    var windowHeight = (window.innerHeight||document.documentElement.clientHeight||0);
+
+        
+    google.charts.load('current', {'packages':['line']});
+    google.charts.setOnLoadCallback(drawChart);
+    
+    function drawChart() {
+    	var data = new google.visualization.DataTable();
+    	data.addColumn('string', 'Day');
+    	data.addColumn('number', '小樽')
+    	data.addColumn('number', 'アスティ');
+    	data.addRows([
+          		<%
+          		PersistenceManager pm = null;
+          		int count = 0;
+          		//一時的に、温度を格納する配列
+          		ArrayList<Double> asti_tem= new ArrayList<Double>();
+          		double tmp = 0;
+          		
+          		try {
+            		pm = PMF.get().getPersistenceManager();
+            		Query query = pm.newQuery(SampleData.class);
+            		query.setOrdering("r_date asc");
+            		List<SampleData> datas = (List<SampleData>) query.execute();
+        			// すべてのエンティティの表示
+        			for (SampleData da : datas) {
+
+	                	if(count == t_end + 6)
+  		           		break;
+	                	
+    					if(da.getName().equals("asti")){
+    						tmp = (da.getTem() - 32) / 1.8;
+    						asti_tem.add(tmp);
+    					}
+
+                						
+						if(count >= t_end){
+							if(da.getName().equals("otaru")){%>
+								['<%= da.getDate() %>', <%=da.getTem()%>, <%=asti_tem.get(count - 2232)%>],
+								<%
+							}
+						}
+
+       				count++;
+       				}
+        		} finally {
+            	if (pm != null && !pm.isClosed())
+               	pm.close();
+        		}
+        		%>
+        		
+    	]);
+	    
+	    var options = {
+	    		chart: {title: ' ', subtitle: ' '},
+        		width: 0.9 * windowWidth + 'px',
+        		height: 600,
+        		};
+	    var chart = new google.charts.Line(document.getElementById('tem_div'));
+
+	    chart.draw(data, options);
+    }
+    
+    </script>
 
 <script type="text/javascript">
 <!--
@@ -31,7 +142,7 @@
 div.tabbox {
 	margin: 10px;
 	padding: 10px;
-	width: 700px;
+	width: windowWidth + px;
 }
 
 /* タブ部分 */
@@ -71,7 +182,7 @@ p.tabs a:hover {
 
 /* タブ中身のボックス */
 div.tab {
-	height: 400px;
+	height: windowHeight + px;
 	overflow: auto;
 	clear: left;
 }
@@ -207,15 +318,16 @@ button.button_linkhelp:hover {
 	<tr>
 		<th>
 		<button class="button_nolink" type="submit" disabled="disabled">小樽</button>
-		</th>
-		
+		</a></th>
+			
 		<th><a href="../Nigata/Nigata_tmp.jsp">
 		<button class="button_link" type="submit">新潟</button>
 		</a></th>
-		
+	
 		<th><a href="../Kofu/Kofu_tmp.jsp">
 		<button class="button_link" type="submit">甲府</button>
-		</a></th>
+		</th>
+		
 		
 		<th><a href="../Nara/Nara_tmp.jsp">
 		<button class="button_link" type="submit">奈良</button>
@@ -241,10 +353,57 @@ button.button_linkhelp:hover {
 
 			<div id="tab1" class="tab">
 				<p>(タブ1の中身。何でも記述できます。)</p>
+				<p>
+				<form name="f">
+					<input type="hidden" name="start" value="<%=start%>">
+					<select name="t_year" size="1" onChange="change(this)">
+						<OPTION VALUE="">------------
+						<% for(int year = 2010; year < 2100; year++){%>
+						<option value="<%= year%>"><%= year%>
+					<% }%>
+					</select>
+					年
+						
+					<select name="t_month" size="1" onChange="change(this)">
+					<OPTION VALUE="">------------
+					<% for(int month = 1; month <= 12; month++) {%>
+					<option value="<%= month%>"><%= month%>
+					<% }%>
+					</select>	
+					月
+					
+					<select name="t_day" size="1" onChange="change(this)">
+					<OPTION VALUE="">------------
+					<% for(int day = 1; day <= 31; day++) {%>
+					<option value="<%= day%>"><%= day%>
+					<% }%>
+					</select>	
+					日
+					
+					<select name="t_hour" size="1" onChange="change(this)">
+					<OPTION VALUE="">------------
+					<% for(int hour = 0; hour <= 23; hour++) {%>
+					<option value="<%= hour%>"><%= hour%>
+					<% }%>
+					</select>	
+					時					
+					
+					<input type="submit" value="move" name="move">
+				</form>
+				</p>
+			    <!-- グラフの id を指定して描画 -->
+              <div id="tem_div"></div>			
+					<form name="f">
+						<input type="hidden" name="t_end" value="<%=t_end%>">
+						<input type="submit" value="pre" name="t_pre">
+						<input type="submit" value="next" name="t_next">
+					</form>
+				</p>
 			</div>
 
 			<div id="tab2" class="tab">
 				<p>(タブ2の中身。HTMLタグも記述可能です。)</p>
+				
 			</div>
 
 			<div id="tab3" class="tab">
@@ -325,18 +484,13 @@ button.button_linkhelp:hover {
 			        	
 			        	var i = 0;
 			        	var j = 0;
-			        	
-			        	/*
-			        	var 今日の日 = mydate.getDate();
-			        	var 日付_data = "2014/" + selectedmonth + "/1" ;//途中
-			        	*/
-			        	
+			        				        	
 			        	var 表示内容_data = null;
-			        	<%PersistenceManager pm = null;
+			        	<%PersistenceManager _pm = null;
 		          		
 		        		try {
-		            		pm = PMF.get().getPersistenceManager();
-		            		Query query = pm.newQuery(SampleData.class);
+		            		_pm = PMF.get().getPersistenceManager();
+		            		Query query = _pm.newQuery(SampleData.class);
 		            		query.setOrdering("r_date asc");
 		            		List<SampleData> datas = (List<SampleData>) query.execute();
 		            		
@@ -402,23 +556,10 @@ button.button_linkhelp:hover {
        							 + "除湿器稼働合計:　" + 除湿器稼働時間_時間 + "時間" + 除湿器稼働時間_分 +"分<br>"
        							 + "加湿器稼働合計:　" + 加湿器稼働時間_時間 + "時間" + 加湿器稼働時間_分 +"分<br>";
 		        			}
-		        			
-		        			
-		        			
-		        			/* for(var i = 0; i < 1000; i++){
-		        				表示内容_data += 農家気温[i] + ",";
-		        				表示内容_data += 農家湿度[i] + " ";
-		        				表示内容_data += 比較地気温[i] + ",";
-		        				表示内容_data += 比較地湿度[i] + "<br>";
-		        			}
-		        			
-		        			表示内容_data += 農家init + "<br>";
-		        			表示内容_data += 比較地init + "<br>";
-		        			表示内容_data += データ位置 + "<br>" ; */
-		        			
+		        					        			
 		        		<%} finally {
-		            	if (pm != null && !pm.isClosed())
-		               	pm.close();
+		            	if (_pm != null && !_pm.isClosed())
+		               	_pm.close();
 		        		}%>
 			        	
 		        		
@@ -426,11 +567,6 @@ button.button_linkhelp:hover {
 				    }
 				</script>
 
-					<!--
-				<p><input type="button" value="例１表示"
-				    onClick="ファイル読込('../plain_csv.csv', '例１')"></input></p>
-				<div id="例１表示場所"></div>
-				-->
 				<script>
 				function PutMoveTime(){
 					
@@ -440,7 +576,6 @@ button.button_linkhelp:hover {
 					    document.getElementById("例１表示場所").innerHTML = 表示内容_nodata;
 					}
 					else{
-						//表示内容_nodata = document.date.year.selectedIndex + 2015 + "年" + document.date.month.selectedIndex + "月";
 						var 表示内容_data = null;
 			        	
 			        	表示内容_data = "a"
