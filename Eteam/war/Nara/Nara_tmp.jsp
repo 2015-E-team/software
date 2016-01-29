@@ -333,6 +333,10 @@ button.button_linkhelp:hover {
 		<th><a href="../Naha/Naha_tmp.jsp">
 		<button class="button_link" type="submit">那覇</button>
 		</a></th>
+
+		<th><a href="../upload/upload.jsp">
+		<button class="button_link" type="submit">アップロード</button>
+		</a></th>
 		
 		<th><a href="../help/help_top.jsp">
 		<button class="button_linkhelp" type="submit">ヘルプ</button>
