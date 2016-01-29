@@ -15,37 +15,37 @@
 <html>
 <head>
 <% 
-	int start = 0;
-	int t_end = 3720; 
+int start = 0;
+int t_end = 0; 
 
-	String t_str = request.getParameter("t_end");
-	String t_next = request.getParameter("t_next");
-	String t_pre = request.getParameter("t_pre");
-	
-	String t_year = request.getParameter("t_year");
-	String t_month = request.getParameter("t_month");
-	String t_day = request.getParameter("t_day");
-	String t_hour = request.getParameter("t_hour");
-	
-		
-	if(t_year != null && t_month != null && t_day != null && t_hour != null){
-		t_end = (Integer.parseInt(t_day) - 1) * 24 + Integer.parseInt(t_hour) + 3720;
- 		if(t_end >= 4458)
- 			t_end = 4458;
-	}
+String t_str = request.getParameter("t_end");
+String t_next = request.getParameter("t_next");
+String t_pre = request.getParameter("t_pre");
 
-	if( t_str != null && t_next != null )
-		if(Integer.parseInt(t_str) < 4452)
-			t_end = Integer.parseInt(t_str) + 6;
-		else 
-			t_end = 4458;
+String t_year = request.getParameter("t_year");
+String t_month = request.getParameter("t_month");
+String t_day = request.getParameter("t_day");
+String t_hour = request.getParameter("t_hour");
+
 	
-	if( t_str != null && t_pre != null ){
-		if(Integer.parseInt(t_str) >= 3727)
-			t_end = Integer.parseInt(t_str) - 6;
-		else 
-			t_end = 3720;
-	}
+if(t_year != null && t_month != null && t_day != null && t_hour != null){
+	t_end = (Integer.parseInt(t_day) - 1) * 24 + Integer.parseInt(t_hour);
+		if(t_end >= 738)
+			t_end = 738;
+}
+
+if( t_str != null && t_next != null )
+	if(Integer.parseInt(t_str) < 732)
+		t_end = Integer.parseInt(t_str) + 6;
+	else 
+		t_end = 738;
+
+if( t_str != null && t_pre != null ){
+	if(Integer.parseInt(t_str) >= 7)
+		t_end = Integer.parseInt(t_str) - 6;
+	else 
+		t_end = 0;
+}
 %>
 
 
@@ -70,41 +70,42 @@
     	data.addColumn('number', '甲府')
     	data.addColumn('number', 'アスティ');
     	data.addRows([
-          		<%
-          		PersistenceManager pm = null;
-          		int count = 0;
-          		//一時的に、温度を格納する配列
-          		ArrayList<Double> asti_tem= new ArrayList<Double>();
-          		
-          		try {
-            		pm = PMF.get().getPersistenceManager();
-            		Query query = pm.newQuery(SampleData.class);
-            		query.setOrdering("r_date asc");
-            		List<SampleData> datas = (List<SampleData>) query.execute();
-        			// すべてのエンティティの表示
-        			for (SampleData da : datas) {
-                	if(count == t_end + 6)
-              		break;
-					if(da.getName().equals("asti")){
-						double tmp = (da.getTem() - 32) / 1.8;
-						asti_tem.add(tmp);
-					}
-                						
-					if(count >= t_end){
-						if(da.getName().equals("kofu")){%>
-							['<%= da.getDate() %>', <%=da.getTem()%> , <%=asti_tem.get(count - 3720)%>],
-							<%
-						}
-					}
-
-       			count++;
-            		}
-        		} finally {
-            	if (pm != null && !pm.isClosed())
-               	pm.close();
-        		}
-        		%>
-        		
+    	          		<%
+    	          		PersistenceManager pm = null;
+    	          		int count = 0;
+    	          		//一時的に、温度を格納する配列
+    	          		ArrayList<Double> asti_tem= new ArrayList<Double>();
+    	          		
+    	          		try {
+    	            		pm = PMF.get().getPersistenceManager();
+    	            		Query tiv_query = pm.newQuery(SampleData.class);
+    	            		tiv_query.setFilter("name == " + "'asti'");           		
+    	            		tiv_query.setOrdering("r_date asc");
+    	            		List<SampleData> tiv_datas = (List<SampleData>) tiv_query.execute();
+    	        			// すべてのエンティティの表示
+    	        			for (SampleData tiv_da : tiv_datas) {
+    							double tmp = (tiv_da.getTem() - 32) / 1.8;
+    							asti_tem.add(tmp);
+    						}
+    	        			
+    	            		Query kof_query = pm.newQuery(SampleData.class);
+    	            		kof_query.setFilter("name == " + "'kofu'");           		
+    	            		kof_query.setOrdering("r_date asc");
+    	            		List<SampleData> kof_datas = (List<SampleData>) kof_query.execute();
+    	                						
+    	            		for(SampleData kof_da: kof_datas){
+    	            			if(count == t_end + 6)
+    	            				break;
+    							if(count >= t_end){%>
+    								['<%= kof_da.getDate() %>', <%=kof_da.getTem()%>, <%=asti_tem.get(count)%>],
+    							<%}
+    	       			count++;
+    	            		}
+    	        		} finally {
+    	            	if (pm != null && !pm.isClosed())
+    	               	pm.close();
+    	        		}
+    	        		%>
     	]);
 	    
 	    var options = {
@@ -347,7 +348,6 @@ button.button_linkhelp:hover {
 			</p>
 
 			<div id="tab1" class="tab">
-				<p>(タブ1の中身。何でも記述できます。)</p>
 				<p>
 				<form name="f">
 					<input type="hidden" name="start" value="<%=start%>">
