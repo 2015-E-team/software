@@ -66,7 +66,7 @@ if( t_str != null && t_pre != null ){
     
     function drawChart() {
     	var data = new google.visualization.DataTable();
-    	data.addColumn('string', 'Day');
+    	data.addColumn('string', ' ');
     	data.addColumn('number', '甲府')
     	data.addColumn('number', 'アスティ');
     	data.addRows([
@@ -78,13 +78,13 @@ if( t_str != null && t_pre != null ){
     	          		
     	          		try {
     	            		pm = PMF.get().getPersistenceManager();
-    	            		Query tiv_query = pm.newQuery(SampleData.class);
-    	            		tiv_query.setFilter("name == " + "'asti'");           		
-    	            		tiv_query.setOrdering("r_date asc");
-    	            		List<SampleData> tiv_datas = (List<SampleData>) tiv_query.execute();
+    	            		Query ast_query = pm.newQuery(SampleData.class);
+    	            		ast_query.setFilter("name == " + "'asti'");           		
+    	            		ast_query.setOrdering("r_date asc");
+    	            		List<SampleData> ast_datas = (List<SampleData>) ast_query.execute();
     	        			// すべてのエンティティの表示
-    	        			for (SampleData tiv_da : tiv_datas) {
-    							double tmp = (tiv_da.getTem() - 32) / 1.8;
+    	        			for (SampleData ast_da : ast_datas) {
+    							double tmp = (ast_da.getTem() - 32) / 1.8;
     							asti_tem.add(tmp);
     						}
     	        			
@@ -112,6 +112,11 @@ if( t_str != null && t_pre != null ){
 	    		chart: {title: ' ', subtitle: ' '},
         		width: 0.9 * windowWidth + 'px',
         		height: 600,
+				axes: {
+					y: {
+						0: {label: '温度（℃）'}
+	    			}
+				}
         		};
 
 	    var chart = new google.charts.Line(document.getElementById('tem_div'));
@@ -344,11 +349,9 @@ button.button_linkhelp:hover {
 	<tr>
 		<div class="tabbox">
 			<p class="tabs">
-				<a href="#tab1" class="tab1"
-					onclick="ChangeTab('tab1'); return false;">温度</a> <a href="#tab2"
-					class="tab2" onclick="ChangeTab('tab2'); return false;">湿度</a> <a
-					href="#tab3" class="tab3"
-					onclick="ChangeTab('tab3'); return false;">稼働状況</a>
+				<a href="#tab1" class="tab1" onclick="ChangeTab('tab1'); return false;">温度</a>
+				<a href="Kofu_hum.jsp" class="tab2" type="submit">湿度</a>
+				<a href="#tab3" class="tab3" onclick="ChangeTab('tab3'); return false;">稼働状況</a>
 			</p>
 
 			<div id="tab1" class="tab">

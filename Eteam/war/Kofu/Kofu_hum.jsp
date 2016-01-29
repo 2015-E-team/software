@@ -16,41 +16,41 @@
 <head>
 <% 
 int start = 0;
-int t_end = 0; 
+int h_end = 0; 
 
-String t_str = request.getParameter("t_end");
-String t_next = request.getParameter("t_next");
-String t_pre = request.getParameter("t_pre");
+String h_str = request.getParameter("h_end");
+String h_next = request.getParameter("h_next");
+String h_pre = request.getParameter("h_pre");
 
-String t_year = request.getParameter("t_year");
-String t_month = request.getParameter("t_month");
-String t_day = request.getParameter("t_day");
-String t_hour = request.getParameter("t_hour");
+String h_year = request.getParameter("h_year");
+String h_month = request.getParameter("h_month");
+String h_day = request.getParameter("h_day");
+String h_hour = request.getParameter("h_hour");
 
 	
-if(t_year != null && t_month != null && t_day != null && t_hour != null){
-	t_end = (Integer.parseInt(t_day) - 1) * 24 + Integer.parseInt(t_hour);
-		if(t_end >= 738)
-			t_end = 738;
+if(h_year != null && h_month != null && h_day != null && h_hour != null){
+	h_end = (Integer.parseInt(h_day) - 1) * 24 + Integer.parseInt(h_hour);
+		if(h_end >= 738)
+			h_end = 738;
 }
 
-if( t_str != null && t_next != null )
-	if(Integer.parseInt(t_str) < 732)
-		t_end = Integer.parseInt(t_str) + 6;
+if( h_str != null && h_next != null )
+	if(Integer.parseInt(h_str) < 732)
+		h_end = Integer.parseInt(h_str) + 6;
 	else 
-		t_end = 738;
+		h_end = 738;
 
-if( t_str != null && t_pre != null ){
-	if(Integer.parseInt(t_str) >= 7)
-		t_end = Integer.parseInt(t_str) - 6;
+if( h_str != null && h_pre != null ){
+	if(Integer.parseInt(h_str) >= 7)
+		h_end = Integer.parseInt(h_str) - 6;
 	else 
-		t_end = 0;
+		h_end = 0;
 }
 %>
 
 
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>那覇</title>
+<title>甲府</title>
 
 	<!--Load the AJAX API-->
 
@@ -66,37 +66,35 @@ if( t_str != null && t_pre != null ){
     function drawChart() {
     	var data = new google.visualization.DataTable();
     	data.addColumn('string', ' ');
-    	data.addColumn('number', '那覇')
-    	data.addColumn('number', 'タヴァルネッレ');
+    	data.addColumn('number', '甲府')
+    	data.addColumn('number', 'アスティ');
     	data.addRows([
     	          		<%
     	          		PersistenceManager pm = null;
     	          		int count = 0;
     	          		//一時的に、温度を格納する配列
-    	          		ArrayList<Double> tival_tem= new ArrayList<Double>();
+    	          		ArrayList<Integer> asti_hum= new ArrayList<Integer>();
     	          		
     	          		try {
     	            		pm = PMF.get().getPersistenceManager();
-    	            		Query tiv_query = pm.newQuery(SampleData.class);
-    	            		tiv_query.setFilter("name == " + "'tival'");           		
-    	            		tiv_query.setOrdering("r_date asc");
-    	            		List<SampleData> tiv_datas = (List<SampleData>) tiv_query.execute();
+    	            		Query ast_query = pm.newQuery(SampleData.class);
+    	            		ast_query.setFilter("name == " + "'asti'");           		
+    	            		ast_query.setOrdering("r_date asc");
+    	            		List<SampleData> ast_datas = (List<SampleData>) ast_query.execute();
     	        			// すべてのエンティティの表示
-    	        			for (SampleData tiv_da : tiv_datas) {
-    							double tmp = (tiv_da.getTem() - 32) / 1.8;
-    							tival_tem.add(tmp);
-    						}
+    	        			for (SampleData ast_da : ast_datas)
+    							asti_hum.add(ast_da.getHum()); 
     	        			
-    	            		Query nah_query = pm.newQuery(SampleData.class);
-    	            		nah_query.setFilter("name == " + "'naha'");           		
-    	            		nah_query.setOrdering("r_date asc");
-    	            		List<SampleData> nah_datas = (List<SampleData>) nah_query.execute();
+    	            		Query kof_query = pm.newQuery(SampleData.class);
+    	            		kof_query.setFilter("name == " + "'kofu'");           		
+    	            		kof_query.setOrdering("r_date asc");
+    	            		List<SampleData> kof_datas = (List<SampleData>) kof_query.execute();
     	                						
-    	            		for(SampleData nah_da: nah_datas){
-    	            			if(count == t_end + 6)
+    	            		for(SampleData kof_da: kof_datas){
+    	            			if(count == h_end + 6)
     	            				break;
-    							if(count >= t_end){%>
-    								['<%= nah_da.getDate() %>', <%=nah_da.getTem()%>, <%=tival_tem.get(count)%>],
+    							if(count >= h_end){%>
+    								['<%= kof_da.getDate() %>', <%=kof_da.getHum()%>, <%=asti_hum.get(count)%>],
     							<%}
     	       			count++;
     	            		}
@@ -113,12 +111,12 @@ if( t_str != null && t_pre != null ){
         		height: 600,
 				axes: {
 					y: {
-						0: {label: '温度（℃）'}
+						0: {label: '湿度（％）'}
 	    			}
 				}
         		};
 
-	    var chart = new google.charts.Line(document.getElementById('tem_div'));
+	    var chart = new google.charts.Line(document.getElementById('hum_div'));
 
 	    chart.draw(data, options);
     }
@@ -325,16 +323,16 @@ button.button_linkhelp:hover {
 		<button class="button_link" type="submit">新潟</button>
 		</a></th>
 		
-		<th><a href="../Kofu/Kofu_tmp.jsp">
-		<button class="button_link" type="submit">甲府</button>
+		<th>
+		<button class="button_nolink" type="submit" disabled="disabled">甲府</button>
 		</a></th>
 		
 		<th><a href="../Nara/Nara_tmp.jsp">
 		<button class="button_link" type="submit">奈良</button>
 		</a></th>
 		
-		<th>
-		<button class="button_nolink" type="submit" disabled="disabled">那覇</button>
+		<th><a href="../Naha/Naha_tmp.jsp">
+		<button class="button_link" type="submit">那覇</button>
 		</a></th>
 		
 		<th><a href="../upload/upload.jsp">
@@ -347,17 +345,20 @@ button.button_linkhelp:hover {
 	</tr>
 	<tr>
 		<div class="tabbox">
-			<p class="tabs">
-				<a href="#tab1" class="tab1" onclick="ChangeTab('tab1'); return false;">温度</a>
-				<a href="Naha_hum.jsp" class="tab2" type="submit">湿度</a>
+			<p class="tabs">	
+				<a href="Kofu_tmp.jsp" class="tab1" type="submit">温度</a>
+				<a href="#tab2" class="tab2" onclick="ChangeTab('tab2'); return false;">湿度</a>
 				<a href="#tab3" class="tab3" onclick="ChangeTab('tab3'); return false;">稼働状況</a>
 			</p>
 
 			<div id="tab1" class="tab">
-				<p>
+			</div>
+
+			<div id="tab2" class="tab">
+							<p>
 				<form name="f">
 					<input type="hidden" name="start" value="<%=start%>">
-					<select name="t_year" size="1" onChange="change(this)">
+					<select name="h_year" size="1" onChange="change(this)">
 						<OPTION VALUE="">------------
 						<% for(int year = 2010; year < 2100; year++){%>
 						<option value="<%= year%>"><%= year%>
@@ -365,7 +366,7 @@ button.button_linkhelp:hover {
 					</select>
 					年
 						
-					<select name="t_month" size="1" onChange="change(this)">
+					<select name="h_month" size="1" onChange="change(this)">
 					<OPTION VALUE="">------------
 					<% for(int month = 1; month <= 12; month++) {%>
 					<option value="<%= month%>"><%= month%>
@@ -373,7 +374,7 @@ button.button_linkhelp:hover {
 					</select>	
 					月
 					
-					<select name="t_day" size="1" onChange="change(this)">
+					<select name="h_day" size="1" onChange="change(this)">
 					<OPTION VALUE="">------------
 					<% for(int day = 1; day <= 31; day++) {%>
 					<option value="<%= day%>"><%= day%>
@@ -381,7 +382,7 @@ button.button_linkhelp:hover {
 					</select>	
 					日
 					
-					<select name="t_hour" size="1" onChange="change(this)">
+					<select name="h_hour" size="1" onChange="change(this)">
 					<OPTION VALUE="">------------
 					<% for(int hour = 0; hour <= 23; hour++) {%>
 					<option value="<%= hour%>"><%= hour%>
@@ -393,18 +394,15 @@ button.button_linkhelp:hover {
 				</form>
 				</p>
 			    <!-- グラフの id を指定して描画 -->
-              <div id="tem_div"></div>			
+              <div id="hum_div"></div>			
 					<form name="f">
-						<input type="hidden" name="t_end" value="<%=t_end%>">
-						<input type="submit" value="pre" name="t_pre">
-						<input type="submit" value="next" name="t_next">
+						<input type="hidden" name="h_end" value="<%=h_end%>">
+						<input type="submit" value="pre" name="h_pre">
+						<input type="submit" value="next" name="h_next">
 					</form>
 				</p>
-			</div>
-
-			<div id="tab2" class="tab">
-				<p>(タブ2の中身。HTMLタグも記述可能です。)</p>
-				
+			
+							
 			</div>
 
 			<div id="tab3" class="tab">
@@ -451,7 +449,7 @@ button.button_linkhelp:hover {
 						<option value="<%= i%>"><%= i%>
 							<% }%>
 						
-					</select> 月 の稼働状況<br> タヴァルネッレの気候データに合わせています<br> <br>
+					</select> 月 の稼働状況<br> アスティの気候データに合わせています<br> <br>
 
 					<script type="text/javascript">
 
@@ -497,7 +495,7 @@ button.button_linkhelp:hover {
 		            		
 		        			// すべてのエンティティの表示
 		        			for (SampleData da : datas) {%>
-		        				if(<%=da.getName().equals("naha")%>){
+		        				if(<%=da.getName().equals("kofu")%>){
 	        				
         							if(農家init == null){
         								農家init = データ位置;
@@ -507,7 +505,7 @@ button.button_linkhelp:hover {
         						農家湿度[i] = <%=da.getHum()%>;
         						i++;
         						}
-        						if(<%=da.getName().equals("tival")%>) {
+        						if(<%=da.getName().equals("asti")%>) {
         					
         							if(比較地init == null){
         								比較地init = データ位置;
@@ -599,7 +597,7 @@ button.button_linkhelp:hover {
 		<script type="text/javascript">
 		<!--
 			// デフォルトのタブを選択
-			ChangeTab('tab1');
+			ChangeTab('tab2');
 		// -->
 		</script>
 
