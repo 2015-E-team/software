@@ -59,14 +59,13 @@ if( t_str != null && t_pre != null ){
     <script type="text/javascript">
     
     var windowWidth = (window.innerWidth||document.documentElement.clientWidth||0);
-    var windowHeight = (window.innerHeight||document.documentElement.clientHeight||0);
         
     google.charts.load('current', {'packages':['line']});
     google.charts.setOnLoadCallback(drawChart);
     
     function drawChart() {
     	var data = new google.visualization.DataTable();
-    	data.addColumn('string', 'Day');
+    	data.addColumn('string', ' ');
     	data.addColumn('number', '奈良')
     	data.addColumn('number', 'トラパニ');
     	data.addRows([
@@ -78,13 +77,13 @@ if( t_str != null && t_pre != null ){
     	          		
     	          		try {
     	            		pm = PMF.get().getPersistenceManager();
-    	            		Query tiv_query = pm.newQuery(SampleData.class);
-    	            		tiv_query.setFilter("name == " + "'trapani'");           		
-    	            		tiv_query.setOrdering("r_date asc");
-    	            		List<SampleData> tiv_datas = (List<SampleData>) tiv_query.execute();
+    	            		Query tra_query = pm.newQuery(SampleData.class);
+    	            		tra_query.setFilter("name == " + "'trapani'");           		
+    	            		tra_query.setOrdering("r_date asc");
+    	            		List<SampleData> tra_datas = (List<SampleData>) tra_query.execute();
     	        			// すべてのエンティティの表示
-    	        			for (SampleData tiv_da : tiv_datas) {
-    							double tmp = (tiv_da.getTem() - 32) / 1.8;
+    	        			for (SampleData tra_da : tra_datas) {
+    							double tmp = (tra_da.getTem() - 32) / 1.8;
     							trapani_tem.add(tmp);
     						}
     	        			
@@ -113,6 +112,11 @@ if( t_str != null && t_pre != null ){
 	    		chart: {title: ' ', subtitle: ' '},
         		width: 0.9 * windowWidth + 'px',
         		height: 600,
+				axes: {
+					y: {
+						0: {label: '温度（℃）'}
+	    			}
+				}
         		};
 
 	    var chart = new google.charts.Line(document.getElementById('tem_div'));
@@ -310,7 +314,7 @@ button.button_linkhelp:hover {
 
 </head>
 <body>
-	<a href="../index.html">
+	<a href="../top.jsp">
 	<button class="button_linktop" type="submit">トップ</button>
 	</a>
 	<tr>
@@ -338,18 +342,16 @@ button.button_linkhelp:hover {
 		<button class="button_link" type="submit">アップロード</button>
 		</a></th>
 		
-		<th><a href="../help/help_top.jsp">
+		<th><a href="../help/help_tem_kadou.jsp">
 		<button class="button_linkhelp" type="submit">ヘルプ</button>
 		</a></th>
 	</tr>
 	<tr>
 		<div class="tabbox">
 			<p class="tabs">
-				<a href="#tab1" class="tab1"
-					onclick="ChangeTab('tab1'); return false;">温度</a> <a href="#tab2"
-					class="tab2" onclick="ChangeTab('tab2'); return false;">湿度</a> <a
-					href="#tab3" class="tab3"
-					onclick="ChangeTab('tab3'); return false;">稼働状況</a>
+				<a href="#tab1" class="tab1" onclick="ChangeTab('tab1'); return false;">温度</a>
+				<a href="Nara_hum.jsp" class="tab2" type="submit">湿度</a>
+				<a href="#tab3" class="tab3" onclick="ChangeTab('tab3'); return false;">稼働状況</a>
 			</p>
 
 			<div id="tab1" class="tab">
@@ -403,6 +405,7 @@ button.button_linkhelp:hover {
 
 			<div id="tab2" class="tab">
 				<p>(タブ2の中身。HTMLタグも記述可能です。)</p>
+
 				
 			</div>
 
