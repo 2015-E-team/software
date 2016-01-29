@@ -3,7 +3,7 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="com.google.appengine.eclipse.core.GAE_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="/kkihome/home/t13cs037/ソフトウェア開発演習2/software/Eteam/commons-io-2.1.jar"/>
-	<classpathentry kind="lib" path="/kkihome/home/t13cs037/ソフトウェア開発演習2/software/Eteam/commons-fileupload-1.2.2.jar"/>
+	<classpathentry kind="lib" path="/home/t13cs051/commons-io-2.1.jar"/>
+	<classpathentry kind="lib" path="/home/t13cs051/commons-fileupload-1.2.2.jar"/>
 	<classpathentry kind="output" path="war/WEB-INF/classes"/>
 </classpath>
