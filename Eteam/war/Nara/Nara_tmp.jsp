@@ -15,37 +15,37 @@
 <html>
 <head>
 <% 
-	int start = 0;
-	int t_end = 4464; 
+int start = 0;
+int t_end = 0; 
 
-	String t_str = request.getParameter("t_end");
-	String t_next = request.getParameter("t_next");
-	String t_pre = request.getParameter("t_pre");
-	
-	String t_year = request.getParameter("t_year");
-	String t_month = request.getParameter("t_month");
-	String t_day = request.getParameter("t_day");
-	String t_hour = request.getParameter("t_hour");
-	
-		
-	if(t_year != null && t_month != null && t_day != null && t_hour != null){
-		t_end = (Integer.parseInt(t_day) - 1) * 24 + Integer.parseInt(t_hour) + 4464;
- 		if(t_end >= 5202)
- 			t_end = 5202;
-	}
+String t_str = request.getParameter("t_end");
+String t_next = request.getParameter("t_next");
+String t_pre = request.getParameter("t_pre");
 
-	if( t_str != null && t_next != null )
-		if(Integer.parseInt(t_str) < 5196)
-			t_end = Integer.parseInt(t_str) + 6;
-		else 
-			t_end = 5202;
+String t_year = request.getParameter("t_year");
+String t_month = request.getParameter("t_month");
+String t_day = request.getParameter("t_day");
+String t_hour = request.getParameter("t_hour");
+
 	
-	if( t_str != null && t_pre != null ){
-		if(Integer.parseInt(t_str) >= 4471)
-			t_end = Integer.parseInt(t_str) - 6;
-		else 
-			t_end = 4464;
-	}
+if(t_year != null && t_month != null && t_day != null && t_hour != null){
+	t_end = (Integer.parseInt(t_day) - 1) * 24 + Integer.parseInt(t_hour);
+		if(t_end >= 738)
+			t_end = 738;
+}
+
+if( t_str != null && t_next != null )
+	if(Integer.parseInt(t_str) < 732)
+		t_end = Integer.parseInt(t_str) + 6;
+	else 
+		t_end = 738;
+
+if( t_str != null && t_pre != null ){
+	if(Integer.parseInt(t_str) >= 7)
+		t_end = Integer.parseInt(t_str) - 6;
+	else 
+		t_end = 0;
+}
 %>
 
 
@@ -70,40 +70,42 @@
     	data.addColumn('number', '奈良')
     	data.addColumn('number', 'トラパニ');
     	data.addRows([
-          		<%
-          		PersistenceManager pm = null;
-          		int count = 0;
-          		//一時的に、温度を格納する配列
-          		ArrayList<Double> trapani_tem= new ArrayList<Double>();
-          		
-          		try {
-            		pm = PMF.get().getPersistenceManager();
-            		Query query = pm.newQuery(SampleData.class);
-            		query.setOrdering("r_date asc");
-            		List<SampleData> datas = (List<SampleData>) query.execute();
-        			// すべてのエンティティの表示
-        			for (SampleData da : datas) {
-                	if(count == t_end + 6)
-              		break;
-					if(da.getName().equals("trapani")){
-						double tmp = (da.getTem() - 32) / 1.8;
-						trapani_tem.add(tmp);
-					}
-                						
-					if(count >= t_end){
-						if(da.getName().equals("nara")){%>
-							['<%= da.getDate() %>', <%=da.getTem()%>, <%=trapani_tem.get(count - 4464)%>],
-							<%
-						}
-					}
-
-       			count++;
-            		}
-        		} finally {
-            	if (pm != null && !pm.isClosed())
-               	pm.close();
-        		}
-        		%>
+    	          		<%
+    	          		PersistenceManager pm = null;
+    	          		int count = 0;
+    	          		//一時的に、温度を格納する配列
+    	          		ArrayList<Double> trapani_tem= new ArrayList<Double>();
+    	          		
+    	          		try {
+    	            		pm = PMF.get().getPersistenceManager();
+    	            		Query tiv_query = pm.newQuery(SampleData.class);
+    	            		tiv_query.setFilter("name == " + "'trapani'");           		
+    	            		tiv_query.setOrdering("r_date asc");
+    	            		List<SampleData> tiv_datas = (List<SampleData>) tiv_query.execute();
+    	        			// すべてのエンティティの表示
+    	        			for (SampleData tiv_da : tiv_datas) {
+    							double tmp = (tiv_da.getTem() - 32) / 1.8;
+    							trapani_tem.add(tmp);
+    						}
+    	        			
+    	            		Query nar_query = pm.newQuery(SampleData.class);
+    	            		nar_query.setFilter("name == " + "'nara'");           		
+    	            		nar_query.setOrdering("r_date asc");
+    	            		List<SampleData> nar_datas = (List<SampleData>) nar_query.execute();
+    	                						
+    	            		for(SampleData nar_da: nar_datas){
+    	            			if(count == t_end + 6)
+    	            				break;
+    							if(count >= t_end){%>
+    								['<%= nar_da.getDate() %>', <%=nar_da.getTem()%>, <%=trapani_tem.get(count)%>],
+    							<%}
+    	       			count++;
+    	            		}
+    	        		} finally {
+    	            	if (pm != null && !pm.isClosed())
+    	               	pm.close();
+    	        		}
+    	        		%>
         		
     	]);
 	    
@@ -347,7 +349,6 @@ button.button_linkhelp:hover {
 			</p>
 
 			<div id="tab1" class="tab">
-				<p>(タブ1の中身。何でも記述できます。)</p>
 				<p>
 				<form name="f">
 					<input type="hidden" name="start" value="<%=start%>">

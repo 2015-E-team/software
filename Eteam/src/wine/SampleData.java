@@ -11,9 +11,11 @@ public class SampleData {
 	
 	//フィールド名の前につける．永続化されることを示す
 	@PrimaryKey
-	@Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
+	private String key;
+//	@Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
 	//自動割付されるID番号(Long値)プライマリーキーとして使うもの
-	private Long key;
+//	private Long key;
+	
 
 	//プライマリキーであることを示すもの．フィールドの名の前につける
 	@Persistent
@@ -34,6 +36,7 @@ public class SampleData {
 	public SampleData(){}
 	
 	public SampleData(String name, String date, double tem, int hum, Date r_date){
+		this.key = name + date;
 		this.name = name;
 		this.date = date;
 		this.tem = tem;

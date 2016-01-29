@@ -16,7 +16,7 @@
 <head>
 <% 
 	int start = 0;
-	int t_end = 2976; 
+	int t_end = 0; 
 
 	String t_str = request.getParameter("t_end");
 	String t_next = request.getParameter("t_next");
@@ -29,22 +29,22 @@
 	
 		
 	if(t_year != null && t_month != null && t_day != null && t_hour != null){
-		t_end = (Integer.parseInt(t_day) - 1) * 24 + Integer.parseInt(t_hour) + 2976;
- 		if(t_end >= 3714)
- 			t_end = 3714;
+		t_end = (Integer.parseInt(t_day) - 1) * 24 + Integer.parseInt(t_hour);
+ 		if(t_end >= 738)
+ 			t_end = 738;
 	}
 
 	if( t_str != null && t_next != null )
-		if(Integer.parseInt(t_str) < 3708)
+		if(Integer.parseInt(t_str) < 732)
 			t_end = Integer.parseInt(t_str) + 6;
 		else 
-			t_end = 3714;
+			t_end = 738;
 	
 	if( t_str != null && t_pre != null ){
-		if(Integer.parseInt(t_str) >= 2983)
+		if(Integer.parseInt(t_str) >= 7)
 			t_end = Integer.parseInt(t_str) - 6;
 		else 
-			t_end = 2976;
+			t_end = 0;
 	}
 %>
 
@@ -79,25 +79,27 @@
           		
           		try {
             		pm = PMF.get().getPersistenceManager();
-            		Query query = pm.newQuery(SampleData.class);
-            		query.setOrdering("r_date asc");
-            		List<SampleData> datas = (List<SampleData>) query.execute();
+            		Query tiv_query = pm.newQuery(SampleData.class);
+            		tiv_query.setFilter("name == " + "'tival'");           		
+            		tiv_query.setOrdering("r_date asc");
+            		List<SampleData> tiv_datas = (List<SampleData>) tiv_query.execute();
         			// すべてのエンティティの表示
-        			for (SampleData da : datas) {
-                	if(count == t_end + 6)
-              		break;
-					if(da.getName().equals("tival")){
-						double tmp = (da.getTem() - 32) / 1.8;
+        			for (SampleData tiv_da : tiv_datas) {
+						double tmp = (tiv_da.getTem() - 32) / 1.8;
 						tival_tem.add(tmp);
 					}
+        			
+            		Query nig_query = pm.newQuery(SampleData.class);
+            		nig_query.setFilter("name == " + "'nigata'");           		
+            		nig_query.setOrdering("r_date asc");
+            		List<SampleData> nig_datas = (List<SampleData>) nig_query.execute();
                 						
-					if(count >= t_end){
-						if(da.getName().equals("nigata")){%>
-							['<%= da.getDate() %>', <%=da.getTem()%>, <%=tival_tem.get(count - 2976)%>],
-							<%
-						}
-					}
-
+            		for(SampleData nig_da: nig_datas){
+            			if(count == t_end + 6)
+            				break;
+						if(count >= t_end){%>
+							['<%= nig_da.getDate() %>', <%=nig_da.getTem()%>, <%=tival_tem.get(count)%>],
+						<%}
        			count++;
             		}
         		} finally {
@@ -347,7 +349,6 @@ button.button_linkhelp:hover {
 			</p>
 
 			<div id="tab1" class="tab">
-				<p>(タブ1の中身。何でも記述できます。)</p>
 				<p>
 				<form name="f">
 					<input type="hidden" name="start" value="<%=start%>">
