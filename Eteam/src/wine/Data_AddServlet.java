@@ -85,6 +85,6 @@ public class Data_AddServlet extends HttpServlet {
 		} catch (FileUploadException e) {
 			resp.sendError(500);
 		}
-		resp.sendRedirect("./Kofu/test.jsp");
+		resp.sendRedirect("../upload/upload.jsp");
 	}
 }
