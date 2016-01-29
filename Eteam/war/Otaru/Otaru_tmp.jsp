@@ -310,7 +310,7 @@ button.button_linkhelp:hover {
 
 </head>
 <body>
-	<a href="../index.html">
+	<a href="../top.jsp">
 	<button class="button_linktop" type="submit">トップ</button>
 	</a>
 	<tr>
@@ -339,7 +339,7 @@ button.button_linkhelp:hover {
 		<button class="button_link" type="submit">アップロード</button>
 		</a></th>
 		
-		<th><a href="../help/help_top.jsp">
+		<th><a href="../help/help_tem_kadou.jsp">
 		<button class="button_linkhelp" type="submit">ヘルプ</button>
 		</a></th>
 	</tr>

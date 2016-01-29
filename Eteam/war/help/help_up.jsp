@@ -205,6 +205,6 @@ button.button_linkhelp:hover {
 		<button class="button_nolink" type="submit" disabled="disabled">ヘルプ</button>
 		</a></th>
 	</tr>
-	<br><img src="top_help.jpg"><br>
+	<br><img src="up_help.jpg"><br>
 </body>
 </html>
