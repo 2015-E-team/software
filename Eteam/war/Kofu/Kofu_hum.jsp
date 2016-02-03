@@ -27,7 +27,7 @@ String h_month = request.getParameter("h_month");
 String h_day = request.getParameter("h_day");
 String h_hour = request.getParameter("h_hour");
 
-	
+
 if(h_year != null && h_month != null && h_day != null && h_hour != null){
 	h_end = (Integer.parseInt(h_day) - 1) * 24 + Integer.parseInt(h_hour);
 		if(h_end >= 738)
@@ -46,6 +46,7 @@ if( h_str != null && h_pre != null ){
 	else 
 		h_end = 0;
 }
+
 %>
 
 
