@@ -118,7 +118,7 @@ if( t_str != null && t_pre != null ){
 						0: {label: '温度（℃）'}
 	    			}
 				}
-        		};
+	    		};
 	    var chart = new google.charts.Line(document.getElementById('tem_div'));
 
 	    chart.draw(data, options);

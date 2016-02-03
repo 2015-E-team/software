@@ -127,7 +127,6 @@ button.button_linkhelp:hover { /* 背景色を明るい青色に指定 */
 		data
 				.addRows([
 <%PersistenceManager pm = null;
-int count = 0;
 //一時的に、温度を格納する配列
 ArrayList<Double> tival_tem= new ArrayList<Double>();
 try {
@@ -139,7 +138,7 @@ try {
 	day_query.setOrdering("r_date asc");
 	List<SampleData> day_datas = (List<SampleData>) day_query.execute();
 	for(SampleData day_da: day_datas){
-		if( count == 3 ){%>
+		if( day_da.getName().equals("otaru") ){%>
 	[
 								'小樽',
 <%=day_da.getTem()%>
@@ -175,7 +174,6 @@ try {
 <%=day_da.getHum()%>
 	],
 <%}
-		count++;
 	}
 } finally {
 	if (pm != null && !pm.isClosed())
@@ -191,7 +189,9 @@ try {
 			region : 'JP', //表示する地図を日本に指定
 			width : windowWidth + 'px',
 			displayMode : 'markers', //表示方式の設定
-			legend : 'none'//凡例の非表示
+			legend : 'none',//凡例の非表示
+			sizeAxis : {minValue:10, maxValue:10},
+			colorAxis :{colors:['#4374e0','#4374e0']}
 		};
 
 		var graph = new google.visualization.GeoChart(document
